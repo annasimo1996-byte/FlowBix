@@ -78,7 +78,7 @@ const forgotPassword = async (req, res) => {
     const resetToken = crypto.randomBytes(20).toString("hex");
 
     user.resetPasswordToken = resetToken;
-    user.resetPasswordExpires = Date.now() + 3600000; // 1 ora in millisecondi
+    user.resetPasswordExpires = Date.now() + 3600000;
 
     await user.save();
 
@@ -123,15 +123,13 @@ const resetPassword = async (req, res) => {
   }
 };
 
-// 5. CALLBACK PER OAUTH (GOOGLE & GITHUB)
+//CALLBACK PER OAUTH (GOOGLE & GITHUB)
 const oauthCallback = (req, res) => {
   try {
-    // Passport inserisce l'utente autenticato dentro req.user
     if (!req.user) {
       return res.status(400).json({ message: "Autenticazione social fallita" });
     }
 
-    // Generiamo il token JWT per l'utente social
     const token = jwt.sign(
       { id: req.user._id, email: req.user.email },
       process.env.JWT_SECRET,
@@ -140,7 +138,6 @@ const oauthCallback = (req, res) => {
 
     // In produzione, di solito si reindirizza al frontend passando il token nella query string:
     // res.redirect(`http://localhost:5173/login-success?token=${token}`);
-    
     // Per adesso che testiamo il backend, restituiamo un JSON di successo
     res.status(200).json({
       message: "Autenticazione Social completata con successo!",

@@ -123,9 +123,39 @@ const resetPassword = async (req, res) => {
   }
 };
 
+// 5. CALLBACK PER OAUTH (GOOGLE & GITHUB)
+const oauthCallback = (req, res) => {
+  try {
+    // Passport inserisce l'utente autenticato dentro req.user
+    if (!req.user) {
+      return res.status(400).json({ message: "Autenticazione social fallita" });
+    }
+
+    // Generiamo il token JWT per l'utente social
+    const token = jwt.sign(
+      { id: req.user._id, email: req.user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
+    );
+
+    // In produzione, di solito si reindirizza al frontend passando il token nella query string:
+    // res.redirect(`http://localhost:5173/login-success?token=${token}`);
+    
+    // Per adesso che testiamo il backend, restituiamo un JSON di successo
+    res.status(200).json({
+      message: "Autenticazione Social completata con successo!",
+      token,
+      user: req.user
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Errore durante il callback OAuth", error: error.message });
+  }
+};
+
 module.exports = {
  register,
   login,
   forgotPassword,
   resetPassword,
+  oauthCallback,
 };

@@ -1,17 +1,24 @@
 const express = require("express");
 const authRouter = express.Router();
-const { register, login, forgotPassword, resetPassword } = require("./authControllers.js");
+const passport = require("passport");
+const { register, login, forgotPassword, resetPassword, oauthCallback } = require("./authControllers.js");
+require("../../config/passport.js");
 
 //Registrazione
 authRouter.post("/register", register);
-
 //Login
 authRouter.post("/login", login);
-
 //Richiesta di reset (genera il token)
 authRouter.post("/forgot-password", forgotPassword);
-
 //Reset effettivo (riceve il token nell'URL e la nuova password nel body)
 authRouter.post("/reset-password/:token", resetPassword);
+
+//ROTTE GOOGLE 
+authRouter.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+authRouter.get("/google/callback", passport.authenticate("google", { session: false }), oauthCallback);
+
+//ROTTE GITHUB
+authRouter.get("/github", passport.authenticate("github", { scope: ["user:email"] }));
+authRouter.get("/github/callback", passport.authenticate("github", { session: false }), oauthCallback);
 
 module.exports = authRouter;

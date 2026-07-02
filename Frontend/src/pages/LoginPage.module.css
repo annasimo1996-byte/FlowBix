@@ -1,0 +1,67 @@
+/* Struttura della pagina di Login */
+.loginWrapper {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  background-color: var(--bg-dark-right);
+}
+
+/* Pannello Sinistro*/
+.heroPanel {
+  display: none; 
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3rem;
+}
+
+/* Pannello Destro*/
+.formPanel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  width: 100%;
+}
+
+/* 📱 MEDIA QUERY: schermi grandi (Desktop - da 992px in su) */
+@media (min-width: 992px) {
+  .heroPanel {
+    display: flex;
+  }
+}
+
+/* Colorazione del testo del Brand o link viola */
+.brandPurpleText {
+  color: var(--brand-purple);
+}
+
+/* Sottotitolo/Paragrafo del pannello Hero */
+.heroDescription {
+  max-width: 440px;
+}
+
+/* Scatola dei passaggi (Clients, Appointments, Finance) */
+.stepBadge {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Contenitore interno dei form (Pannello destro) */
+.formInnerContainer {
+  max-width: 420px;
+}
+
+/* Tab Nav contenitore */
+.customNavPills {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Checkbox personalizzato */
+.customCheckbox {
+  background-color: transparent;
+  border-color: rgba(255, 255, 255, 0.3);
+}

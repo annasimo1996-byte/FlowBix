@@ -1,0 +1,116 @@
+:root {
+  --bg-dark-right: rgb(10, 10, 15);
+  --bg-dark-left: #0e1118;
+  --brand-purple: rgb(124, 107, 255); /* Il tuo viola esatto */
+  --glow-color: rgba(124, 107, 255, 0.15); 
+}
+
+/* Reset base del body */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-dark-right);
+  color: #ffffff;
+}
+
+/* EFFETTI DI SFONDO*/
+/* Gradiente*/
+.brand-sidebar-gradient {
+  background-color: var(--bg-dark-left);
+  background-image: radial-gradient(
+    circle at 20% 20%, 
+    var(--glow-color) 0%, 
+    transparent 60%
+  );
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* BOTTONE */
+.btn-flowbix {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--brand-purple) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.4),
+    0 4px 14px rgba(124, 107, 255, 0.4);
+}
+
+.btn-flowbix:hover {
+  background-color: rgb(140, 125, 255) !important;
+  transform: translateY(-1px);
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.5),
+    0 6px 20px rgba(124, 107, 255, 0.6);
+}
+
+.btn-flowbix:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Fprm*/
+.form-control.custom-input {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control.custom-input:focus {
+  border-color: var(--brand-purple) !important;
+  box-shadow: 0 0 0 3px rgba(124, 107, 255, 0.25) !important;
+}
+
+.btn-primary-custom {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--brand-purple) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4), 0 4px 14px rgba(124, 107, 255, 0.4);
+}
+
+.btn-primary-custom:hover {
+  background-color: rgb(140, 125, 255) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 6px 20px rgba(124, 107, 255, 0.6);
+}
+
+.nav-pills .nav-link {
+  color: #a0aec0 !important;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.nav-pills .nav-link:hover {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.nav-pills .nav-link.active {
+  background-color: var(--brand-purple) !important;
+  color: #ffffff !important;
+
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.4),
+    0 4px 14px rgba(124, 107, 255, 0.4) !important;
+}

@@ -1,16 +1,15 @@
 import { NavLink } from 'react-router-dom'
 import './Sidebar.css'
-
 import Logo from '../brand/Logo' 
 
 const MENU_ITEMS = [
   { path: '/', label: 'Home', icon: 'bi-grid-1x2-fill' },
-  { path: '/clienti', label: 'Clients', icon: 'bi-people-fill' },
-  { path: '/appuntamenti', label: 'Appointments', icon: 'bi-calendar-week-fill' },
-  { path: '/spese-ricavi', label: 'Finance', icon: 'bi-wallet2' },
+  { path: '/clients', label: 'Clients', icon: 'bi-people-fill' },
+  { path: '/appointments', label: 'Appointments', icon: 'bi-calendar-week-fill' },
+  { path: '/finance', label: 'Finance', icon: 'bi-wallet2' },
 ]
 
-function Sidebar() {
+function Sidebar({ onItemClick }) { 
   return (
     <aside className="sidebarContainer">
       
@@ -25,6 +24,7 @@ function Sidebar() {
             <NavLink
               key={item.path}
               to={item.path}
+              onClick={onItemClick}
               className={({ isActive }) => 
                 isActive ? 'sidebarLink sidebarLinkActive' : 'sidebarLink'
               }

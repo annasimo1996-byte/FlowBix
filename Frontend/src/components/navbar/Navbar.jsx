@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
-import './Navbar.css' 
+import './Navbar.css'
 
-function Navbar() {
+function Navbar({ onToggleSidebar }) {
   const location = useLocation()
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef(null)
@@ -31,14 +31,13 @@ function Navbar() {
       case '/settings':
         return 'Settings'
       default:
-        return 'FlowBix' 
+        return 'FlowBix'
     }
   }
 
   const mockUser = {
-    name: 'Anna Moreau',
-    role: 'Pro plan',
-    avatarUrl: null 
+    name: 'Anna Maria',
+    avatarUrl: null
   }
 
   const getInitials = (name) => {
@@ -52,58 +51,74 @@ function Navbar() {
 
   const handleLogout = () => {
     console.log("Esecuzione logout...")
-    // Collegamento della funzione AuthContext
   }
 
   return (
     <header className="navbarContainer">
-      
-      {/*Titolo della pagina*/}
-      <div>
-        <h1 className="navbarTitle">{getPageTitle(location.pathname)}</h1>
+
+      {/* Sinistra */}
+      <div className="d-flex align-items-center gap-3">
+
+        {/* Mobile */}
+        <button
+          className="btn text-white p-0 d-lg-none"
+          onClick={onToggleSidebar}
+          style={{ fontSize: '1.5rem', lineHeight: '1' }}
+          title="Apri menu"
+        >
+          <i className="bi bi-list" />
+        </button>
+
+        <h1 className="navbarTitle mb-0 d-none d-lg-block">
+          {getPageTitle(location.pathname)}
+        </h1>
+
+        {/* LOGO MOBILE */}
+        <div className="d-flex align-items-center gap-2 d-lg-none">
+          <span className="text-white fw-bold" style={{ fontSize: '1.2rem' }}>
+            Flow<span style={{ color: 'var(--brand-purple)' }}>Bix</span>
+          </span>
+        </div>
       </div>
 
-      {/*Input di ricerca*/}
-      <div className="navbarSearchWrapper">
+      {/* Input di ricerca*/}
+      <div className="navbarSearchWrapper d-none d-lg-block">
         <i className="bi bi-search navbarSearchIcon" />
-        <input 
-          type="text" 
-          className="navbarSearchInput" 
-          placeholder="Search clients, appointments..." 
+        <input
+          type="text"
+          className="navbarSearchInput"
+          placeholder="Search clients, appointments..."
         />
       </div>
 
-      {/*Notifiche e informazioni utente */}
+      {/* Notifiche e informazioni utente */}
       <div className="navbarRight">
-        
+
         {/* Pulsante notifiche */}
         <button className="notificationBtn" title="Notifiche">
           <i className="bi bi-bell-fill" />
           <span className="notificationBadge" />
         </button>
 
-        {/* Contenitore Dropdown con Ref di controllo */}
+        {/* Contenitore Dropdown */}
         <div className="userDropdownWrapper" ref={dropdownRef}>
-        
+
           <div className="userDropdownTrigger" onClick={() => setDropdownOpen(!dropdownOpen)}>
-            
-            
+
             <div className="avatarCircle">
               {mockUser.avatarUrl ? (
-                <img 
-                  src={mockUser.avatarUrl} 
-                  alt={mockUser.name} 
-                  className="avatarImage" 
+                <img
+                  src={mockUser.avatarUrl}
+                  alt={mockUser.name}
+                  className="avatarImage"
                 />
               ) : (
                 <span>{getInitials(mockUser.name)}</span>
               )}
             </div>
 
-            {/* Nome  e ruolo */}
             <div className="userInfoText d-none d-sm-flex flex-column">
               <span className="userProfileName">{mockUser.name}</span>
-              <span className="userProfileRole">{mockUser.role}</span>
             </div>
 
             <i className={`bi bi-chevron-down dropdownArrow d-none d-sm-block transitionArrow ${dropdownOpen ? 'rotate' : ''}`} />
@@ -114,7 +129,6 @@ function Navbar() {
             <div className="customDropdownMenu">
               <div className="dropdownHeader d-sm-none">
                 <div className="fw-semibold text-white">{mockUser.name}</div>
-                <div className="small text-muted">{mockUser.role}</div>
                 <hr className="my-2 border-secondary" />
               </div>
               <button className="dropdownItem">

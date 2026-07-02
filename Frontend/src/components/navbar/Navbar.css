@@ -236,3 +236,15 @@
     transform: translateY(0);
   }
 }
+
+/*NAVBAR MOBILE*/
+.navbarMobileToggle {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+.navbarLogoMobile {
+  font-size: 1.2rem;
+}
+.navbarBrandPurple {
+  color: var(--brand-purple);
+}

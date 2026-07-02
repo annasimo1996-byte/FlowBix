@@ -31,9 +31,9 @@ function App() {
           element={isLogged ? <AppLayout /> : <Navigate to="/login" />}
         >
           <Route path="/" element={<DashboardView />} />
-          <Route path="/clienti" element={<ClientiView />} />
-          <Route path="/appuntamenti" element={<AppuntamentiView />} />
-          <Route path="/spese-ricavi" element={<SpeseRicaviView />} />
+          <Route path="/clients" element={<ClientiView />} />
+          <Route path="/appointments" element={<AppuntamentiView />} />
+          <Route path="/finance" element={<SpeseRicaviView />} />
         </Route>
 
         {/* Rotta di fallback*/}

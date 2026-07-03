@@ -1,6 +1,6 @@
 const express = require("express");
 const usersRouter = express.Router();
-const { protect } = require("../../middlewares/authMiddleware.js");
+const { protect } = require("../../middlewares/auth/authMiddleware.js");
 const {
   getAllUsers,
   getUserById,
@@ -9,7 +9,7 @@ const {
   deleteUser,
 } = require("./usersControllers.js");
 
-// Rotte per il percorso base / 
+// Rotte per il percorso base
 usersRouter.get("/", protect, getAllUsers);
 usersRouter.post("/", createUser);
 

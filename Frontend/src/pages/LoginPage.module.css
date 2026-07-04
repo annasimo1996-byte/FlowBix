@@ -1,33 +1,31 @@
-/* Struttura della pagina di Login */
-.loginWrapper {
-  display: flex;
-  min-height: 100vh;
-  width: 100%;
-  overflow-x: hidden;
-  background-color: var(--bg-dark-right);
-}
-
 /* Pannello Sinistro */
 .heroPanel {
   display: none; 
   flex: 1;
   flex-direction: column;
   justify-content: flex-start; 
-  gap: 5rem;
+  gap: 4rem; /* Leggermente ridotto per sicurezza */
   padding: 3rem;
   height: 100vh;
-  position: sticky;
-  top: 0;
 }
 
+.loginWrapper {
+  display: flex;
+  height: 100vh; /* Forza l'altezza massima allo schermo */
+  width: 100%;
+  overflow: hidden; /* Blocca definitivamente qualsiasi scroll globale */
+  background-color: var(--bg-dark-right);
+}
 /* Pannello Destro*/
 .formPanel {
   flex: 1;
   display: flex;
-  align-items: center;
+  align-items: center; /* Centra perfettamente il form nello schermo */
   justify-content: center;
-  padding: 1.5rem;
+  padding: 1rem 1.5rem; /* Padding ridotto per recuperare spazio verticale */
   width: 100%;
+  height: 100vh;
+  overflow: hidden; /* Elimina lo scroll interno del form */
 }
 
 /*MEDIA QUERY: schermi grandi (Desktop - da 992px in su) */
@@ -47,7 +45,7 @@
   max-width: 440px;
 }
 
-/* Scatola dei passaggi (Clients, Appointments, Finance) */
+/*(Clients, Appointments, Finance)*/
 .stepBadge {
   background-color: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -56,15 +54,15 @@
 /* Contenitore interno dei form (Pannello destro) */
 .formInnerContainer {
   max-width: 420px;
+  width: 100%;
 }
 
-/* Tab Nav contenitore */
 .customNavPills {
   background-color: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Checkbox personalizzato */
+/* Checkbox*/
 .customCheckbox {
   background-color: transparent;
   border-color: rgba(255, 255, 255, 0.3);

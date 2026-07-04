@@ -7,13 +7,17 @@
   background-color: var(--bg-dark-right);
 }
 
-/* Pannello Sinistro*/
+/* Pannello Sinistro */
 .heroPanel {
   display: none; 
   flex: 1;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start; 
+  gap: 5rem;
   padding: 3rem;
+  height: 100vh;
+  position: sticky;
+  top: 0;
 }
 
 /* Pannello Destro*/
@@ -26,14 +30,14 @@
   width: 100%;
 }
 
-/* 📱 MEDIA QUERY: schermi grandi (Desktop - da 992px in su) */
+/*MEDIA QUERY: schermi grandi (Desktop - da 992px in su) */
 @media (min-width: 992px) {
   .heroPanel {
     display: flex;
   }
 }
 
-/* Colorazione del testo del Brand o link viola */
+/* Colorazione del testo del Brand e link */
 .brandPurpleText {
   color: var(--brand-purple);
 }

@@ -5,9 +5,11 @@ import { AuthContext } from './context/AuthContext'
 // Importiamo le pagine
 import LoginPage from './pages/LoginPage'
 import DashboardView from './pages/DashboardView'
-import ClientiView from './pages/ClientiView'
+import ClientsView from "./pages/clientsView";
 import AppuntamentiView from './pages/AppuntamentiView'
 import SpeseRicaviView from './pages/FinanzeView'
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 import AppLayout from './layout/AppLayout'
 
@@ -31,7 +33,7 @@ function App() {
           element={isLogged ? <AppLayout /> : <Navigate to="/login" />}
         >
           <Route path="/" element={<DashboardView />} />
-          <Route path="/clients" element={<ClientiView />} />
+          <Route path="/clients" element={<ClientsView />} />
           <Route path="/appointments" element={<AppuntamentiView />} />
           <Route path="/finance" element={<SpeseRicaviView />} />
         </Route>

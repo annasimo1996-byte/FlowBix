@@ -10,12 +10,12 @@ const {
 } = require("./usersControllers.js");
 
 // Rotte per il percorso base
-usersRouter.get("/", protect, getAllUsers);
+// usersRouter.get("/", protect, getAllUsers); //
 usersRouter.post("/", createUser);
 
 // Rotte per i percorsi con ID specifico 
-usersRouter.get("/:id", getUserById);
-usersRouter.put("/:id", protect, updateUser);
-usersRouter.delete("/:id", protect, deleteUser);
+usersRouter.get("/:id", protect, getUserById);   
+usersRouter.put("/:id", protect, updateUser);    
+usersRouter.delete("/:id", protect, deleteUser); 
 
 module.exports = usersRouter;

@@ -17,9 +17,18 @@ const deleteClientById = async (clientId) => {
   return await Client.findByIdAndDelete(clientId);
 };
 
+const updateClientById = async (clientId, updateData) => {
+  return await Client.findByIdAndUpdate(
+    clientId,
+    updateData,
+    { new: true, runValidators: true }
+  );
+};
+
 module.exports = {
   getAllClientsByUserId,
   createClient,
   getClientById,
-  deleteClientById
+  deleteClientById,
+  updateClientById
 };

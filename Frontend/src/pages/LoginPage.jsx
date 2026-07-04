@@ -1,8 +1,9 @@
 import { useState, useContext } from 'react'
 import { Tab, Nav } from 'react-bootstrap'
 import { AuthContext } from '../context/AuthContext'
-import styles from './LoginPage.module.css' 
+import styles from './LoginPage.module.css'
 import Logo from '../components/brand/Logo'
+import { sendRequest } from '../utils/api'
 
 import SocialButtons from '../components/common/SocialButtons'
 import Divider from '../components/common/Divider'
@@ -19,17 +20,37 @@ function LoginPage() {
   const [password, setPassword] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
+  const [error, setError] = useState(null)
 
   const { login } = useContext(AuthContext)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    setError(null)
     if (tab === 'login') {
-      const mockToken = 'finto-token-jwt-flowbix'
-      const mockUser = { email: email, name: 'Utente FlowBix' }
-      login(mockToken, mockUser)
+      try {
+        const data = await sendRequest("/auth/login", {
+          method: "POST",
+          body: JSON.stringify({ email, password })
+        });
+
+        if (data && data.token) {
+          login(data.token, data.user);
+        }
+      } catch (err) {
+        setError(err.message || "Invalid email or password");
+      }
     } else {
-      setTab('login')
+      try {
+        await sendRequest("/auth/register", {
+          method: "POST",
+          body: JSON.stringify({ firstName, lastName, email, password }),
+        });
+        setTab('login');
+        alert("Registration successful! Please sign in.");
+      } catch (err) {
+        setError(err.message || "Registration failed");
+      }
     }
   }
 
@@ -68,7 +89,7 @@ function LoginPage() {
           </div>
         </div>
 
-        <div></div> 
+        <div></div>
       </div>
 
       {/* Pannello Destro */}
@@ -118,7 +139,7 @@ function LoginPage() {
                     </div>
                     <a href="#" className={`${styles.brandPurpleText} small text-decoration-none fw-medium`}>Forgot password?</a>
                   </div>
-                  
+
                   <button type="submit" className="btn btn-primary-custom w-100 rounded-3 py-2 fw-bold">
                     Sign in
                   </button>
@@ -145,7 +166,7 @@ function LoginPage() {
                     <label className="form-label small fw-semibold text-light">Password</label>
                     <input type="password" className="form-control custom-input rounded-3" placeholder="Create a strong password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                   </div>
-                  
+
                   <button type="submit" className="btn btn-primary-custom w-100 rounded-3 py-2 fw-bold">
                     Create account
                   </button>

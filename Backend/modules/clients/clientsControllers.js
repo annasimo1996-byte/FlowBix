@@ -52,8 +52,38 @@ const removeClient = async (req, res, next) => {
   }
 };
 
+const updateClient = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { name, company, email, phone, notes } = req.body;
+
+    const client = await clientsService.getClientById(id);
+
+    if (!client) {
+      throw new NotFoundException("Client not found");
+    }
+
+    if (client.userId.toString() !== req.user._id.toString()) {
+      throw new ForbiddenException("User not authorized to update this client");
+    }
+
+    const updatedClient = await clientsService.updateClientById(id, { 
+      name, 
+      company, 
+      email, 
+      phone, 
+      notes 
+    });
+
+    res.status(200).json(updatedClient);
+  } catch (error) {
+    next(error); 
+  }
+};
+
 module.exports = {
   getClients,
   addClient,
-  removeClient
+  removeClient,
+  updateClient
 };

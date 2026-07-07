@@ -1,0 +1,22 @@
+.screenContainer {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #0d0e12;
+}
+
+.rightContentWrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.pageDynamicArea {
+  flex: 1;
+  padding: 2rem;
+  background-color: #0d0e12;
+}

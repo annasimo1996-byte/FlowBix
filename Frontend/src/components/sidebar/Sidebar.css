@@ -1,0 +1,64 @@
+.sidebarContainer {
+  width: 260px;
+  min-width: 260px;
+  height: 100vh;
+  background-color: var(--bg-dark-left);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem;
+}
+
+/* Logo */
+.sidebarLogo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+/*link di navigazione */
+.sidebarNav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Singolo link (Stato normale) */
+.sidebarLink {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: #a0aec0;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.sidebarLink:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Link attivo */
+.sidebarLinkActive {
+  color: #ffffff !important;
+  background-color: rgba(124, 108, 255, 0.1) !important;
+  border: 1px solid rgba(124, 108, 255, 0.2);
+}
+
+.sidebarIcon {
+  font-size: 1.1rem;
+}
+
+.sidebarFooter {
+  color: #718096;
+  font-size: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 1rem;
+}

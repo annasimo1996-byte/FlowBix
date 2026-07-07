@@ -2,6 +2,8 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const startDb = require("./config/db.js"); 
+const usersRouter = require("./modules/users/usersRoute.js");
+const authRouter = require("./modules/auth/authRoute.js");
 
 const server = express();
 const PORT = process.env.PORT;
@@ -13,5 +15,8 @@ server.use(cors());
 server.get("/", (req, res) => {
   res.send("API di FlowBix funzionanti al 100%!");
 });
+
+server.use("/users", usersRouter);
+server.use("/auth", authRouter);
 
 startDb(PORT, server);

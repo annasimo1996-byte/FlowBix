@@ -20,6 +20,7 @@ function LoginPage() {
   const [password, setPassword] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
+  const [rememberMe, setRememberMe] = useState(false)
   const [error, setError] = useState(null)
 
   const { login } = useContext(AuthContext)
@@ -35,7 +36,7 @@ function LoginPage() {
         });
 
         if (data && data.token) {
-          login(data.token, data.user);
+          login(data.token, data.user, rememberMe);
         }
       } catch (err) {
         setError(err.message || "Invalid email or password");
@@ -121,6 +122,9 @@ function LoginPage() {
             <SocialButtons />
             <Divider />
 
+            {/* Mostra errore se presente */}
+            {error && <div className="alert alert-danger rounded-3 small py-2 mb-3">{error}</div>}
+
             <Tab.Content>
               <Tab.Pane eventKey="login">
                 <form onSubmit={handleSubmit}>
@@ -134,7 +138,13 @@ function LoginPage() {
                   </div>
                   <div className="d-flex justify-content-between align-items-center mb-4">
                     <div className="form-check">
-                      <input className={`${styles.customCheckbox} form-check-input`} type="checkbox" id="remember" />
+                      <input 
+                        className={`${styles.customCheckbox} form-check-input`} 
+                        type="checkbox" 
+                        id="remember" 
+                        checked={rememberMe}
+                        onChange={(e) => setRememberMe(e.target.checked)}
+                      />
                       <label className="form-check-label small text-white-50" htmlFor="remember">Remember me</label>
                     </div>
                     <a href="#" className={`${styles.brandPurpleText} small text-decoration-none fw-medium`}>Forgot password?</a>

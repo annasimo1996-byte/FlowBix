@@ -8,33 +8,62 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Quando la pagina si carica, controlliamo se c'è un token JWT salvato nel browser
-    const token = localStorage.getItem('token')
-    if (token) {
-      // In futuro qui faremo una validazione reale con il Backend. Per ora fingiamo sia valido:
-      setIsLogged(true)
+    const checkToken = async () => {
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token')
+      
+      if (token) {
+        try {
+          const response = await fetch('http://localhost:9998/api/auth/me', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          })
+
+          if (response.ok) {
+            const data = await response.json()
+            setUser(data.user)
+            setIsLogged(true)
+          } else {
+            localStorage.removeItem('token')
+            sessionStorage.removeItem('token')
+          }
+        } catch (error) {
+          console.error("Errore durante la validazione del token:", error)
+        }
+      }
+      
+      setLoading(false)
     }
-    setLoading(false)
+
+    checkToken()
   }, [])
 
-  // Funzione per effettuare il login (salva il token e aggiorna lo stato)
-  const login = (token, userData) => {
-    localStorage.setItem('token', token)
+  const login = (token, userData, rememberMe = false) => {
+    if (rememberMe) {
+      localStorage.setItem('token', token) // Sessione persistente (rimane se chiudi il browser)
+    } else {
+      sessionStorage.setItem('token', token) // Sessione temporanea (scompare se chiudi la scheda)
+    }
     setUser(userData)
     setIsLogged(true)
   }
 
-  // Funzione per effettuare il logout (cancella il token e resetta lo stato)
   const logout = () => {
     localStorage.removeItem('token')
+    sessionStorage.removeItem('token')
     setUser(null)
     setIsLogged(false)
   }
 
   return (
     <AuthContext.Provider value={{ isLogged, user, loading, login, logout }}>
-      {/* Mostriamo l'applicazione solo quando il controllo del token iniziale è terminato */}
-      {!loading && children}
+      
+      {!loading ? children : (
+        <div className="flex h-screen w-screen items-center justify-center bg-slate-900 text-white">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        </div>
+      )}
     </AuthContext.Provider>
   )
 }

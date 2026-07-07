@@ -1,11 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { useLocation } from 'react-router-dom'
+import React, { useState, useEffect, useRef, useContext } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { AuthContext } from '../../context/AuthContext'
 import './Navbar.css'
 
 function Navbar({ onToggleSidebar }) {
   const location = useLocation()
+  const navigate = useNavigate()
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef(null)
+
+  const { user, logout } = useContext(AuthContext)
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -35,22 +39,18 @@ function Navbar({ onToggleSidebar }) {
     }
   }
 
-  const mockUser = {
-    name: 'Anna Maria',
-    avatarUrl: null
-  }
+  const fullName = user ? `${user.firstName} ${user.lastName}` : 'User'
 
-  const getInitials = (name) => {
-    if (!name) return '??'
-    const parts = name.split(' ')
-    if (parts.length >= 2) {
-      return `${parts[0][0]}${parts[1][0]}`.toUpperCase()
-    }
-    return name.slice(0, 2).toUpperCase()
+  const getInitials = (firstName, lastName) => {
+    if (!firstName && !lastName) return '??'
+    const fLetter = firstName ? firstName[0] : ''
+    const lLetter = lastName ? lastName[0] : ''
+    return `${fLetter}${lLetter}`.toUpperCase()
   }
 
   const handleLogout = () => {
-    console.log("Esecuzione logout...")
+    logout()
+    navigate('/login')
   }
 
   return (
@@ -61,9 +61,8 @@ function Navbar({ onToggleSidebar }) {
 
         {/* Mobile */}
         <button
-          className="btn text-white p-0 d-lg-none"
+          className="btn text-white p-0 d-lg-none navbarMobileToggle"
           onClick={onToggleSidebar}
-          style={{ fontSize: '1.5rem', lineHeight: '1' }}
           title="Apri menu"
         >
           <i className="bi bi-list" />
@@ -75,8 +74,8 @@ function Navbar({ onToggleSidebar }) {
 
         {/* LOGO MOBILE */}
         <div className="d-flex align-items-center gap-2 d-lg-none">
-          <span className="text-white fw-bold" style={{ fontSize: '1.2rem' }}>
-            Flow<span style={{ color: 'var(--brand-purple)' }}>Bix</span>
+          <span className="text-white fw-bold navbarLogoMobile">
+            Flow<span className="navbarBrandPurple">Bix</span>
           </span>
         </div>
       </div>
@@ -106,19 +105,11 @@ function Navbar({ onToggleSidebar }) {
           <div className="userDropdownTrigger" onClick={() => setDropdownOpen(!dropdownOpen)}>
 
             <div className="avatarCircle">
-              {mockUser.avatarUrl ? (
-                <img
-                  src={mockUser.avatarUrl}
-                  alt={mockUser.name}
-                  className="avatarImage"
-                />
-              ) : (
-                <span>{getInitials(mockUser.name)}</span>
-              )}
+              <span>{getInitials(user?.firstName, user?.lastName)}</span>
             </div>
 
             <div className="userInfoText d-none d-sm-flex flex-column">
-              <span className="userProfileName">{mockUser.name}</span>
+              <span className="userProfileName">{fullName}</span>
             </div>
 
             <i className={`bi bi-chevron-down dropdownArrow d-none d-sm-block transitionArrow ${dropdownOpen ? 'rotate' : ''}`} />
@@ -128,7 +119,8 @@ function Navbar({ onToggleSidebar }) {
           {dropdownOpen && (
             <div className="customDropdownMenu">
               <div className="dropdownHeader d-sm-none">
-                <div className="fw-semibold text-white">{mockUser.name}</div>
+              
+                <div className="fw-semibold text-white">{fullName}</div>
                 <hr className="my-2 border-secondary" />
               </div>
               <button className="dropdownItem">

@@ -34,10 +34,8 @@ const loginUser = async ({ email, password }) => {
   }
 
   const token = jwt.sign(
-    { 
-        id: user._id, 
-        email: user.email 
-    },process.env.JWT_SECRET || "super_secret_key_backup",
+    { id: user._id }, 
+    process.env.JWT_SECRET || "super_secret_key_backup",
     { expiresIn: "24h" }
   );
 
@@ -84,10 +82,8 @@ const generateOAuthToken = (user) => {
   }
 
   return jwt.sign(
-    { 
-        id: user._id, 
-        email: user.email 
-    },process.env.JWT_SECRET || "super_secret_key_backup",
+    { id: user._id }, 
+    process.env.JWT_SECRET || "super_secret_key_backup",
     { expiresIn: "24h" }
   );
 };

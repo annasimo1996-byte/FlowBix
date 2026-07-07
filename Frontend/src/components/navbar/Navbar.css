@@ -77,7 +77,6 @@
   transition: all 0.2s ease;
 }
 
-
 .notificationBtn i {
   color: #ffffff !important;
   font-size: 1.2rem !important;
@@ -174,7 +173,6 @@
   transform: rotate(180deg);
 }
 
-
 .customDropdownMenu {
   position: absolute;
   right: 0;
@@ -237,14 +235,16 @@
   }
 }
 
-/*NAVBAR MOBILE*/
+/* NAVBAR MOBILE */
 .navbarMobileToggle {
-  font-size: 1.5rem;
-  line-height: 1;
+  font-size: 1.5rem !important;
+  line-height: 1 !important;
 }
+
 .navbarLogoMobile {
   font-size: 1.2rem;
 }
+
 .navbarBrandPurple {
   color: var(--brand-purple);
 }

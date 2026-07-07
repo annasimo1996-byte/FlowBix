@@ -1,10 +1,12 @@
 const express = require("express");
 const authRouter = express.Router();
 const passport = require("passport");
-const { register, login, forgotPassword, resetPassword, oauthCallback } = require("./authControllers.js");
+const { register, login, forgotPassword, resetPassword, oauthCallback, getMe } = require("./authControllers.js");
 const { validateRegister } = require("../../middlewares/validation/validation.js");
+const authMiddleware = require("../../middlewares/auth/authMiddleware.js");
 require("../../config/passport.js");
 
+authRouter.get("/me", authMiddleware.protect, getMe);
 
 authRouter.post("/register", validateRegister, register);
 authRouter.post("/login", login);

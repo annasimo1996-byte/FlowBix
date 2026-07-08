@@ -4,6 +4,7 @@ const cors = require("cors");
 const startDb = require("./config/db.js"); 
 const usersRouter = require("./modules/users/usersRoute.js");
 const authRouter = require("./modules/auth/authRoute.js");
+const errorHandler = require("./middlewares/errorHandler.js");
 
 const server = express();
 const PORT = process.env.PORT;
@@ -18,5 +19,7 @@ server.get("/", (req, res) => {
 
 server.use("/users", usersRouter);
 server.use("/auth", authRouter);
+
+server.use(errorHandler);
 
 startDb(PORT, server);

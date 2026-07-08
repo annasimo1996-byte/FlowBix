@@ -9,12 +9,13 @@ const {
   deleteUser,
 } = require("./usersControllers.js");
 
-// Rotte per il percorso base / 
+// Rotte per il percorso base
 usersRouter.get("/", protect, getAllUsers);
-usersRouter.post("/", createUser);
 
-// Rotte per i percorsi con ID specifico 
-usersRouter.get("/:id", getUserById);
+usersRouter.post("/", protect, createUser);
+
+// Rotte per i percorsi con ID specifico
+usersRouter.get("/:id", protect, getUserById); 
 usersRouter.put("/:id", protect, updateUser);
 usersRouter.delete("/:id", protect, deleteUser);
 

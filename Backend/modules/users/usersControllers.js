@@ -1,63 +1,75 @@
 const userService = require("./usersService.js");
 
-const getAllUsers = async (req, res) => {
+const BadRequestException = require("../../exception/BadRequestException");
+const NotFoundException = require("../../exception/NotFoundException");
+
+//TUTTI GLI UTENTI
+const getAllUsers = async (req, res, next) => {
   try {
     const users = await userService.findUsers();
     res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ message: "Errore nel recupero degli utenti", error: error.message });
+    next(error);
   }
 };
 
-const getUserById = async (req, res) => {
+//UN UTENTE PER ID
+const getUserById = async (req, res, next) => {
   try {
     const user = await userService.findUserById(req.params.id);
     if (!user) {
-      return res.status(404).json({ message: "Utente non trovato" });
+      throw new NotFoundException("User not found");
     }
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ message: "Errore nel recupero dell'utente", error: error.message });
+    next(error);
   }
 };
 
-const createUser = async (req, res) => {
+//NUOVO UTENTE
+const createUser = async (req, res, next) => {
   try {
     const { firstName, lastName, email, password } = req.body;
 
+    if (!firstName || !lastName || !email || !password) {
+      throw new BadRequestException("All fields (firstName, lastName, email, password) are required");
+    }
+
     const existingUser = await userService.findUserByEmail(email);
     if (existingUser) {
-      return res.status(400).json({ message: "Questa email è già registrata" });
+      throw new BadRequestException("This email is already registered");
     }
 
     const newUser = await userService.createUser({ firstName, lastName, email, password });
     res.status(201).json(newUser);
   } catch (error) {
-    res.status(500).json({ message: "Errore nella creazione dell'utente", error: error.message });
+    next(error);
   }
 };
 
-const updateUser = async (req, res) => {
+//AGGIORNA UN UTENTE
+const updateUser = async (req, res, next) => {
   try {
     const updatedUser = await userService.updateUser(req.params.id, req.body);
     if (!updatedUser) {
-      return res.status(404).json({ message: "Utente non trovato" });
+      throw new NotFoundException("User not found");
     }
     res.status(200).json(updatedUser);
   } catch (error) {
-    res.status(500).json({ message: "Errore nell'aggiornamento dell'utente", error: error.message });
+    next(error);
   }
 };
 
-const deleteUser = async (req, res) => {
+//ELIMINA UN UTENTE
+const deleteUser = async (req, res, next) => {
   try {
     const deletedUser = await userService.deleteUser(req.params.id);
     if (!deletedUser) {
-      return res.status(404).json({ message: "Utente non trovato" });
+      throw new NotFoundException("User not found");
     }
-    res.status(200).json({ message: "Utente eliminato con successo" });
+    res.status(200).json({ message: "User successfully deleted" });
   } catch (error) {
-    res.status(500).json({ message: "Errore nell'eliminazione dell'utente", error: error.message });
+    next(error);
   }
 };
 

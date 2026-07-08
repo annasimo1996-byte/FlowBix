@@ -8,23 +8,23 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Quando la pagina si carica, controlliamo se c'è un token JWT salvato nel browser
+    
     const token = localStorage.getItem('token')
     if (token) {
-      // In futuro qui faremo una validazione reale con il Backend. Per ora fingiamo sia valido:
+      
       setIsLogged(true)
     }
     setLoading(false)
   }, [])
 
-  // Funzione per effettuare il login (salva il token e aggiorna lo stato)
+  // Funzione di login 
   const login = (token, userData) => {
     localStorage.setItem('token', token)
     setUser(userData)
     setIsLogged(true)
   }
 
-  // Funzione per effettuare il logout (cancella il token e resetta lo stato)
+  // Funzione di login
   const logout = () => {
     localStorage.removeItem('token')
     setUser(null)
@@ -33,7 +33,6 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={{ isLogged, user, loading, login, logout }}>
-      {/* Mostriamo l'applicazione solo quando il controllo del token iniziale è terminato */}
       {!loading && children}
     </AuthContext.Provider>
   )

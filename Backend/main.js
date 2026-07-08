@@ -10,7 +10,16 @@ const server = express();
 const PORT = process.env.PORT;
 
 server.use(express.json()); 
-server.use(cors());
+server.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      process.env.CLIENT_URL
+    ],
+    credentials: true,
+  })
+);
+
 
 // Rotta di test iniziale per verificare il funzionamento
 server.get("/", (req, res) => {

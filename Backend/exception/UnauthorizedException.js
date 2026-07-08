@@ -1,4 +1,4 @@
-const { HttpException } = require("./index");
+const HttpException = require("./index.js");
 
 class UnauthorizedException extends HttpException {
   constructor(message = "Unauthorized access") {

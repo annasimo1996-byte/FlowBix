@@ -1,7 +1,6 @@
-const { HttpException } = require("../exception/index");
+const HttpException = require("../exception/index.js");
 
 const errorHandler = (err, req, res, next) => {
-  // 1. Se l'errore è una delle eccezioni personalizzate
   if (err instanceof HttpException) {
     return res.status(err.statusCode).json({
       statusCode: err.statusCode,
@@ -10,10 +9,8 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 
-  // Log in console dei bug interni del server (es. crash di sintassi)
-  console.error("💥 SERVER CRITICAL ERROR:", err.message || err);
+  console.error("SERVER CRITICAL ERROR:", err.message || err);
 
-  // 2. Fallback per errori generici non intercettati (500)
   return res.status(500).json({
     statusCode: 500,
     message: "Internal server error",

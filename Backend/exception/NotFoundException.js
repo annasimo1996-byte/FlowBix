@@ -1,4 +1,4 @@
-const { HttpException } = require("./index");
+const HttpException = require("./index.js"); 
 
 class NotFoundException extends HttpException {
   constructor(message = "Resource not found") {

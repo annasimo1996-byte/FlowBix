@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const userService = require("../users/usersService.js");
 
 // Importiamo le eccezioni personalizzate
-const BadRequestException = require("../../exception/BadRequestException");
+const BadRequestException = require("../../exception/BadRequestException.js");
 const NotFoundException = require("../../exception/NotFoundException");
 
 // REGISTRAZIONE UTENTE

@@ -11,7 +11,6 @@ const PORT = process.env.PORT;
 
 server.use(express.json()); 
 server.use(cors());
-server.use(errorHandler);
 
 // Rotta di test iniziale per verificare il funzionamento
 server.get("/", (req, res) => {
@@ -20,5 +19,7 @@ server.get("/", (req, res) => {
 
 server.use("/users", usersRouter);
 server.use("/auth", authRouter);
+
+server.use(errorHandler);
 
 startDb(PORT, server);

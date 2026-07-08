@@ -4,12 +4,14 @@ const cors = require("cors");
 const startDb = require("./config/db.js"); 
 const usersRouter = require("./modules/users/usersRoute.js");
 const authRouter = require("./modules/auth/authRoute.js");
+const errorHandler = require("./middlewares/errorHandler.js");
 
 const server = express();
 const PORT = process.env.PORT;
 
 server.use(express.json()); 
 server.use(cors());
+server.use(errorHandler);
 
 // Rotta di test iniziale per verificare il funzionamento
 server.get("/", (req, res) => {

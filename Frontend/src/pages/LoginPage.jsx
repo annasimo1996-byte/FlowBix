@@ -75,7 +75,7 @@ function LoginPage() {
       <div className={styles.formPanel}>
         <div className={`${styles.formInnerContainer} w-100`}>
 
-          <div className="d-lg-none mb-4 fs-3 fw-bold d-flex align-items-center gap-2">
+          <div className="d-lg-none mb-3 fs-3 fw-bold d-flex align-items-center gap-2">
             <Logo size="32px" />
             <span className="text-white">Flow<span className={styles.brandPurpleText}>Bix</span></span>
           </div>
@@ -83,12 +83,12 @@ function LoginPage() {
           <h3 className="fw-bold mb-1 text-white">
             {tab === 'login' ? 'Welcome back' : 'Create your account'}
           </h3>
-          <p className="text-white-50 opacity-75 mb-4">
+          <p className="text-white-50 opacity-75 mb-3">
             {tab === 'login' ? 'Sign in to continue to your workspace.' : 'Start automating in minutes.'}
           </p>
 
           <Tab.Container activeKey={tab} onSelect={(k) => setTab(k ?? 'login')}>
-            <Nav variant="pills" className={`${styles.customNavPills} nav-justified mb-4 p-1 rounded-3`}>
+            <Nav variant="pills" className={`${styles.customNavPills} nav-justified mb-3 p-1 rounded-3`}>
               <Nav.Item>
                 <Nav.Link eventKey="login" className="rounded-3 text-white">Login</Nav.Link>
               </Nav.Item>
@@ -103,15 +103,15 @@ function LoginPage() {
             <Tab.Content>
               <Tab.Pane eventKey="login">
                 <form onSubmit={handleSubmit}>
-                  <div className="mb-3">
-                    <label className="form-label small fw-semibold text-light">Email</label>
+                  <div className="mb-2">
+                    <label className="form-label small fw-semibold text-light mb-1">Email</label>
                     <input type="email" className="form-control custom-input rounded-3" placeholder="you@company.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
                   </div>
                   <div className="mb-2">
-                    <label className="form-label small fw-semibold text-light">Password</label>
+                    <label className="form-label small fw-semibold text-light mb-1">Password</label>
                     <input type="password" className="form-control custom-input rounded-3" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
                   </div>
-                  <div className="d-flex justify-content-between align-items-center mb-4">
+                  <div className="d-flex justify-content-between align-items-center mb-3">
                     <div className="form-check">
                       <input className={`${styles.customCheckbox} form-check-input`} type="checkbox" id="remember" />
                       <label className="form-check-label small text-white-50" htmlFor="remember">Remember me</label>
@@ -119,7 +119,7 @@ function LoginPage() {
                     <a href="#" className={`${styles.brandPurpleText} small text-decoration-none fw-medium`}>Forgot password?</a>
                   </div>
                   
-                  <button type="submit" className="btn btn-primary-custom w-100 rounded-3 py-2 fw-bold">
+                  <button type="submit" className="btn btn-primary-custom w-100 rounded-3 py-1.5 fw-bold">
                     Sign in
                   </button>
                 </form>
@@ -127,26 +127,26 @@ function LoginPage() {
 
               <Tab.Pane eventKey="register">
                 <form onSubmit={handleSubmit}>
-                  <div className="row g-2 mb-3">
+                  <div className="row g-2 mb-2">
                     <div className="col-6">
-                      <label className="form-label small fw-semibold text-light">First name</label>
+                      <label className="form-label small fw-semibold text-light mb-1">First name</label>
                       <input type="text" className="form-control custom-input rounded-3" placeholder="Anna" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
                     </div>
                     <div className="col-6">
-                      <label className="form-label small fw-semibold text-light">Last name</label>
+                      <label className="form-label small fw-semibold text-light mb-1">Last name</label>
                       <input type="text" className="form-control custom-input rounded-3" placeholder="Moreau" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
                     </div>
                   </div>
-                  <div className="mb-3">
-                    <label className="form-label small fw-semibold text-light">Email</label>
+                  <div className="mb-2">
+                    <label className="form-label small fw-semibold text-light mb-1">Email</label>
                     <input type="email" className="form-control custom-input rounded-3" placeholder="you@company.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
                   </div>
-                  <div className="mb-4">
-                    <label className="form-label small fw-semibold text-light">Password</label>
+                  <div className="mb-3">
+                    <label className="form-label small fw-semibold text-light mb-1">Password</label>
                     <input type="password" className="form-control custom-input rounded-3" placeholder="Create a strong password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                   </div>
                   
-                  <button type="submit" className="btn btn-primary-custom w-100 rounded-3 py-2 fw-bold">
+                  <button type="submit" className="btn btn-primary-custom w-100 rounded-3 py-1.5 fw-bold">
                     Create account
                   </button>
                 </form>
@@ -154,7 +154,7 @@ function LoginPage() {
             </Tab.Content>
           </Tab.Container>
 
-          <p className="text-center text-white-50 small mt-4 mb-0">
+          <p className="text-center text-white-50 small mt-3 mb-0">
             {tab === 'login' ? "Don't have an account? " : 'Already registered? '}
             <button type="button" className={`${styles.brandPurpleText} btn btn-link p-0 align-baseline text-decoration-none small fw-semibold`} onClick={() => setTab(tab === 'login' ? 'register' : 'login')}>
               {tab === 'login' ? 'Sign up' : 'Sign in'}

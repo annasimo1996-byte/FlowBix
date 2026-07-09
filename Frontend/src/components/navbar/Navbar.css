@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 2rem;
+  padding: 0 1rem;
   background-color: #0d0e12 !important; 
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   position: sticky;
@@ -13,7 +13,25 @@
   width: 100%;
 }
 
-/* Sinistra*/
+/* Sezione Sinistra */
+.navbarLeftSection {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Pulsante Hamburger */
+.hamburgerBtn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1.6rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
 .navbarTitle {
   font-size: 1.1rem;
   font-weight: 600;
@@ -21,8 +39,9 @@
   margin: 0;
 }
 
-/* Centro*/
+/* Barra di ricerca */
 .navbarSearchWrapper {
+  display: none;
   position: relative;
   width: 100%;
   max-width: 380px;
@@ -55,14 +74,13 @@
   outline: none;
 }
 
-/* Destra */
+/* Sezione Destra */
 .navbarRight {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
-/* Pulsante Notifiche*/
 .notificationBtn {
   background: none;
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -76,7 +94,6 @@
   position: relative;
   transition: all 0.2s ease;
 }
-
 
 .notificationBtn i {
   color: #ffffff !important;
@@ -101,18 +118,16 @@
   box-shadow: 0 0 6px var(--brand-purple); 
 }
 
-/* Contenitore Dropdown*/
 .userDropdownWrapper {
   position: relative;
 }
 
-/* Blocco Utente*/
 .userDropdownTrigger {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   cursor: pointer;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem;
   border-radius: 8px;
   transition: background-color 0.2s ease;
   user-select: none;
@@ -122,7 +137,6 @@
   background-color: rgba(255, 255, 255, 0.03);
 }
 
-/* Avatar*/
 .avatarCircle {
   width: 36px;
   height: 36px;
@@ -144,8 +158,9 @@
   object-fit: cover;
 }
 
+/* Informazioni profilo nascoste su mobile */
 .userInfoText {
-  display: flex;
+  display: none;
   flex-direction: column;
   line-height: 1.2;
 }
@@ -156,17 +171,13 @@
   font-weight: 500;
 }
 
-.userProfileRole {
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 0.75rem;
-}
-
+/* Freccia nascosta su mobile */
 .dropdownArrow {
+  display: none;
   color: rgba(255, 255, 255, 0.3);
   font-size: 0.75rem;
 }
 
-/* Animazione Freccia */
 .transitionArrow {
   transition: transform 0.2s ease;
 }
@@ -174,6 +185,27 @@
   transform: rotate(180deg);
 }
 
+/* Header del dropdown visibile solo su mobile */
+.dropdownHeaderResponsive {
+  display: block;
+  padding: 0.25rem 0.75rem;
+}
+
+.dropdownUserName {
+  font-weight: 600;
+  color: #ffffff;
+  font-size: 0.85rem;
+}
+
+.dropdownUserRole {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.dropdownMenuDivider {
+  margin: 0.5rem 0;
+  border-color: rgba(255, 255, 255, 0.06);
+}
 
 .customDropdownMenu {
   position: absolute;
@@ -234,5 +266,33 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/*MEDIA QUERY: DA DESKTOP (Da 992px in su) */
+@media (min-width: 992px) {
+  .navbarContainer {
+    padding: 0 2rem;
+  }
+
+  /* Componenti estesi */
+  .hamburgerBtn {
+    display: none;
+  }
+
+  .navbarSearchWrapper {
+    display: block;
+  }
+
+  .userInfoText {
+    display: flex;
+  }
+
+  .dropdownArrow {
+    display: block;
+  }
+  
+  .dropdownHeaderResponsive {
+    display: none;
   }
 }

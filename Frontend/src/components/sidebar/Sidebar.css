@@ -1,6 +1,10 @@
+/*COMPORTAMENTO BASE: MOBILE-FIRST*/
 .sidebarContainer {
-  width: 260px;
-  min-width: 260px;
+  position: fixed;
+  top: 0;
+  left: -280px; 
+  width: 280px;
+  min-width: 280px;
   height: 100vh;
   background-color: var(--bg-dark-left);
   border-right: 1px solid rgba(255, 255, 255, 0.05);
@@ -8,26 +12,104 @@
   flex-direction: column;
   justify-content: space-between;
   padding: 1.5rem;
+  z-index: 1050; 
+  transition: transform 0.3s ease-in-out; 
 }
 
-/* Logo */
+.sidebarOpen {
+  transform: translateX(280px);
+}
+
+.sidebarBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  z-index: 1040;
+}
+
+/* Header della Sidebar */
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
 .sidebarLogo {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #ffffff;
-  margin-bottom: 2rem;
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 }
 
-/*link di navigazione */
+.textWhite {
+  color: #ffffff;
+}
+
+.brandPurpleText {
+  color: var(--brand-purple);
+}
+
+/* Pulsante X di chiusura su mobile */
+.closeSidebarBtn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+  transition: color 0.2s ease;
+}
+
+.closeSidebarBtn:hover {
+  color: #ffffff;
+}
+
+/* Ricerca su Mobile*/
+.sidebarSearchMobile {
+  display: block;
+  margin-bottom: 1.5rem;
+}
+
+.sidebarSearchInner {
+  position: relative;
+  width: 100%;
+}
+
+.sidebarSearchIcon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.85rem;
+}
+
+.sidebarSearchInput {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 0.45rem 0.75rem 0.45rem 2.2rem;
+  color: #ffffff;
+  font-size: 0.85rem;
+  outline: none;
+}
+
+/* Navigazione e Link */
 .sidebarNav {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-/* Singolo link (Stato normale) */
 .sidebarLink {
   display: flex;
   align-items: center;
@@ -45,7 +127,6 @@
   background-color: rgba(255, 255, 255, 0.03);
 }
 
-/* Link attivo */
 .sidebarLinkActive {
   color: #ffffff !important;
   background-color: rgba(124, 108, 255, 0.1) !important;
@@ -61,4 +142,27 @@
   font-size: 0.85rem;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   padding-top: 1rem;
+}
+
+
+/*MEDIA QUERY: DA DESKTOP IN SU (>= 992px) */
+@media (min-width: 992px) {
+  .sidebarContainer {
+    position: static;
+    width: 260px;
+    min-width: 260px;
+    transform: none !important;
+    transition: none;
+  }
+
+  /*Composizione del menu*/
+  .closeSidebarBtn,
+  .sidebarSearchMobile,
+  .sidebarBackdrop {
+    display: none !important;
+  }
+
+  .sidebarHeader {
+    margin-bottom: 2rem;
+  }
 }

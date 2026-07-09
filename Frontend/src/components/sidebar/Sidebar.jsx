@@ -1,6 +1,5 @@
 import { NavLink } from 'react-router-dom'
 import './Sidebar.css'
-
 import Logo from '../brand/Logo' 
 
 const MENU_ITEMS = [
@@ -10,38 +9,62 @@ const MENU_ITEMS = [
   { path: '/spese-ricavi', label: 'Finance', icon: 'bi-wallet2' },
 ]
 
-function Sidebar() {
+function Sidebar({ isOpen, onClose }) {
   return (
-    <aside className="sidebarContainer">
-      
-      <div>
-        <div className="sidebarLogo d-flex align-items-center gap-2">
-          <Logo />
-          <span className="text-white">Flow<span style={{ color: 'var(--brand-purple)' }}>Bix</span></span>
+    <>
+      {isOpen && <div className="sidebarBackdrop" onClick={onClose} />}
+
+      <aside className={`sidebarContainer ${isOpen ? 'sidebarOpen' : ''}`}>
+        
+        <div className="sidebarTopContent">
+          {/* Lobo e chiusura da mobile*/}
+          <div className="sidebarHeader">
+            <div className="sidebarLogo">
+              <Logo />
+              <span className="textWhite">Flow<span className="brandPurpleText">Bix</span></span>
+            </div>
+            <button className="closeSidebarBtn" onClick={onClose} title="Chiudi menu">
+              <i className="bi bi-x-lg" />
+            </button>
+          </div>
+
+          {/* Barra di ricerca interna su mobile */}
+          <div className="sidebarSearchMobile">
+            <div className="sidebarSearchInner">
+              <i className="bi bi-search sidebarSearchIcon" />
+              <input 
+                type="text" 
+                className="sidebarSearchInput" 
+                placeholder="Search..." 
+              />
+            </div>
+          </div>
+
+          {/* Link di Navigazione */}
+          <nav className="sidebarNav">
+            {MENU_ITEMS.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                onClick={onClose} 
+                className={({ isActive }) => 
+                  isActive ? 'sidebarLink sidebarLinkActive' : 'sidebarLink'
+                }
+              >
+                <i className={`bi ${item.icon} sidebarIcon`} />
+                <span>{item.label}</span>
+              </NavLink>
+            ))}
+          </nav>
         </div>
 
-        <nav className="sidebarNav">
-          {MENU_ITEMS.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={({ isActive }) => 
-                isActive ? 'sidebarLink sidebarLinkActive' : 'sidebarLink'
-              }
-            >
-              <i className={`bi ${item.icon} sidebarIcon`} />
-              <span>{item.label}</span>
-            </NavLink>
-          ))}
-        </nav>
-      </div>
+        {/* FOOTER */}
+        <div className="sidebarFooter">
+          <i className="bi bi-shield-check me-1" /> Secure Session
+        </div>
 
-      {/* FOOTER */}
-      <div className="sidebarFooter">
-        <i className="bi bi-shield-check me-1" /> 
-      </div>
-
-    </aside>
+      </aside>
+    </>
   )
 }
 

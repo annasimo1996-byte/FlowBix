@@ -1,5 +1,5 @@
 const VITE_API_URL = import.meta.env.VITE_API_URL;
-S
+
 export const sendRequest = async (endpoint, options = {}) => {
 
     //Se c'è il token memorizza

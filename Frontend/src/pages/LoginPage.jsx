@@ -6,6 +6,7 @@ import Logo from '../components/brand/Logo'
 
 import SocialButtons from '../components/common/SocialButtons'
 import Divider from '../components/common/Divider'
+import ResetPasswordModal from '../components/modals/ResetPasswordModal' 
 
 const FLOW_STEPS = [
   { icon: 'bi-people-fill', label: 'Clients', color: '#4d9fe8' },
@@ -20,16 +21,60 @@ function LoginPage() {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
 
+  const [errorMessage, setErrorMessage] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+
+  const [showResetModal, setShowResetModal] = useState(false)
+
   const { login } = useContext(AuthContext)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (tab === 'login') {
-      const mockToken = 'finto-token-jwt-flowbix'
-      const mockUser = { email: email, name: 'Utente FlowBix' }
-      login(mockToken, mockUser)
-    } else {
-      setTab('login')
+    setErrorMessage('')
+    setIsLoading(true)
+
+    const BASE_URL = import.meta.env.VITE_API_URL 
+
+    try {
+      if (tab === 'login') {
+        const response = await fetch(`${BASE_URL}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        })
+
+        if (!response.ok) {
+          const contentType = response.headers.get("content-type")
+          if (contentType && contentType.includes("application/json")) {
+            const data = await response.json()
+            throw new Error(data.message || 'Invalid credentials')
+          } else {
+            throw new Error(`Server error (${response.status}). Check the connection.`)
+          }
+        }
+
+        const data = await response.json()
+        login(data.token, data.user)
+      } else {
+        const response = await fetch(`${BASE_URL}/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ firstName, lastName, email, password }),
+        })
+
+        if (!response.ok) {
+          const data = await response.json().catch(() => ({}))
+          throw new Error(data.message || 'Registration failed')
+        }
+
+        setTab('login')
+        setPassword('')
+        alert('Registration successful! Please sign in.')
+      }
+    } catch (error) {
+      setErrorMessage(error.message)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -87,7 +132,14 @@ function LoginPage() {
             {tab === 'login' ? 'Sign in to continue to your workspace.' : 'Start automating in minutes.'}
           </p>
 
-          <Tab.Container activeKey={tab} onSelect={(k) => setTab(k ?? 'login')}>
+          {errorMessage && (
+            <div className="alert alert-danger rounded-3 small py-2 mb-3" role="alert">
+              <i className="bi bi-exclamation-triangle-fill me-2" />
+              {errorMessage}
+            </div>
+          )}
+
+          <Tab.Container activeKey={tab} onSelect={(k) => { setTab(k ?? 'login'); setErrorMessage(''); }}>
             <Nav variant="pills" className={`${styles.customNavPills} nav-justified mb-3 p-1 rounded-3`}>
               <Nav.Item>
                 <Nav.Link eventKey="login" className="rounded-3 text-white">Login</Nav.Link>
@@ -116,11 +168,18 @@ function LoginPage() {
                       <input className={`${styles.customCheckbox} form-check-input`} type="checkbox" id="remember" />
                       <label className="form-check-label small text-white-50" htmlFor="remember">Remember me</label>
                     </div>
-                    <a href="#" className={`${styles.brandPurpleText} small text-decoration-none fw-medium`}>Forgot password?</a>
+                    
+                    <button 
+                      type="button" 
+                      onClick={() => setShowResetModal(true)} 
+                      className={`${styles.brandPurpleText} btn btn-link p-0 small text-decoration-none fw-medium align-baseline border-0 bg-transparent`}
+                    >
+                      Forgot password?
+                    </button>
                   </div>
                   
-                  <button type="submit" className="btn btn-primary-custom w-100 rounded-3 py-1.5 fw-bold">
-                    Sign in
+                  <button type="submit" className="btn btn-primary-custom w-100 rounded-3 py-1.5 fw-bold" disabled={isLoading}>
+                    {isLoading ? 'Processing...' : 'Sign in'}
                   </button>
                 </form>
               </Tab.Pane>
@@ -146,8 +205,8 @@ function LoginPage() {
                     <input type="password" className="form-control custom-input rounded-3" placeholder="Create a strong password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                   </div>
                   
-                  <button type="submit" className="btn btn-primary-custom w-100 rounded-3 py-1.5 fw-bold">
-                    Create account
+                  <button type="submit" className="btn btn-primary-custom w-100 rounded-3 py-1.5 fw-bold" disabled={isLoading}>
+                    {isLoading ? 'Processing...' : 'Create account'}
                   </button>
                 </form>
               </Tab.Pane>
@@ -156,12 +215,14 @@ function LoginPage() {
 
           <p className="text-center text-white-50 small mt-3 mb-0">
             {tab === 'login' ? "Don't have an account? " : 'Already registered? '}
-            <button type="button" className={`${styles.brandPurpleText} btn btn-link p-0 align-baseline text-decoration-none small fw-semibold`} onClick={() => setTab(tab === 'login' ? 'register' : 'login')}>
+            <button type="button" className={`${styles.brandPurpleText} btn btn-link p-0 align-baseline text-decoration-none small fw-semibold`} onClick={() => { setTab(tab === 'login' ? 'register' : 'login'); setErrorMessage(''); }}>
               {tab === 'login' ? 'Sign up' : 'Sign in'}
             </button>
           </p>
         </div>
       </div>
+
+      <ResetPasswordModal show={showResetModal} onHide={() => setShowResetModal(false)} />
 
     </div>
   )

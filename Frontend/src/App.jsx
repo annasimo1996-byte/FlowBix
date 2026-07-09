@@ -2,12 +2,12 @@ import { useContext } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthContext } from './context/AuthContext'
 
-// Importiamo le pagine
 import LoginPage from './pages/LoginPage'
 import DashboardView from './pages/DashboardView'
 import ClientiView from './pages/ClientiView'
 import AppuntamentiView from './pages/AppuntamentiView'
 import SpeseRicaviView from './pages/FinanzeView'
+import ResetPasswordPage from "./pages/ResetPasswordPage"
 
 import AppLayout from './layout/AppLayout'
 
@@ -17,17 +17,17 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        
+
         {/* ROTTA DI LOGIN*/}
-        <Route 
-          path="/login" 
-          element={isLogged ? <Navigate to="/" /> : <LoginPage />} 
+        <Route
+          path="/login"
+          element={isLogged ? <Navigate to="/" /> : <LoginPage />}
         />
 
         {/* CONTENITORE DELLE ROTTE PROTETTE: 
            
         */}
-        <Route 
+        <Route
           element={isLogged ? <AppLayout /> : <Navigate to="/login" />}
         >
           <Route path="/" element={<DashboardView />} />
@@ -38,7 +38,7 @@ function App() {
 
         {/* Rotta di fallback*/}
         <Route path="*" element={<Navigate to="/" />} />
-
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
       </Routes>
     </BrowserRouter>
   )

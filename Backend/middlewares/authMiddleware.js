@@ -3,19 +3,17 @@ const User = require("../modules/users/usersSchema.js");
 const UnauthorizedException = require("../exception/UnauthorizedException");
 
 const protect = async (req, res, next) => {
-  let token;
-
   try {
+    //Verifica header Authorizations
     if (
       req.headers.authorization &&
       req.headers.authorization.startsWith("Bearer")
     ) {
-      token = req.headers.authorization.split(" ")[1];
+      const token = req.headers.authorization.split(" ")[1];
 
-      // Verifica il token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || "super_secret_key_backup");
+      //Verifica il token
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // Cerca l'utente escludendo la password
       req.user = await User.findById(decoded.id).select("-password");
 
       if (!req.user) {
@@ -25,17 +23,16 @@ const protect = async (req, res, next) => {
       return next();
     }
 
-    //senza un token valido
-    if (!token) {
-      throw new UnauthorizedException("Unauthorized, no token provided");
-    }
+    //Header assente o non conforme
+    throw new UnauthorizedException("Unauthorized, no token provided");
+
   } catch (error) {
-    // Se jwt.verify fallisce
+    //Errori di firma o scadenza del JWT
     if (error.name === "JsonWebTokenError" || error.name === "TokenExpiredError") {
       return next(new UnauthorizedException("Unauthorized, invalid or expired token"));
     }
     
-    // Passiamo qualsiasi altro errore imprevisto all'errorHandler
+    //Qualsiasi altro errore all'errorHandler
     next(error);
   }
 };

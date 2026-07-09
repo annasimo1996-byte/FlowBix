@@ -1,7 +1,7 @@
-/* 📱 STRUTTURA BASE: MOBILE-FIRST (Schermi piccoli) */
+/* STRUTTURA BASE: MOBILE-FIRST*/
 .screenContainer {
   display: flex;
-  flex-direction: column; /* Su mobile gli elementi vanno dall'alto in basso */
+  flex-direction: column; 
   width: 100vw;
   height: 100vh;
   overflow: hidden;
@@ -14,19 +14,19 @@
   flex: 1;
   height: 100%;
   overflow-x: hidden;
-  overflow-y: auto; /* Consente lo scorrimento dei contenuti interni della pagina */
+  overflow-y: auto;
 }
 
 .pageDynamicArea {
   flex: 1;
-  padding: 1rem; /* Padding ridotto su mobile per non comprimere i box */
+  padding: 1rem; 
   background-color: #0d0e12;
 }
 
-/* 🖥️ MEDIA QUERY: DA TABLET/DESKTOP IN SU (Da 992px) */
+/*MEDIA QUERY: DA TABLET/DESKTOP IN SU (Da 992px) */
 @media (min-width: 992px) {
   .screenContainer {
-    flex-direction: row; /* Ripristina l'affiancamento Sidebar + Contenuti */
+    flex-direction: row;
   }
 
   .rightContentWrapper {
@@ -34,6 +34,6 @@
   }
 
   .pageDynamicArea {
-    padding: 2rem; /* Ripristina lo spazio ampio solo dove c'è schermo a sufficienza */
+    padding: 2rem; 
   }
 }

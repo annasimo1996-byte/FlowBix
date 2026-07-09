@@ -8,11 +8,15 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    
     const token = localStorage.getItem('token')
-    if (token) {
-      
+    const savedUser = localStorage.getItem('user')
+    
+    if (token && savedUser) {
       setIsLogged(true)
+      setUser(JSON.parse(savedUser)) 
+    } else {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
     }
     setLoading(false)
   }, [])
@@ -20,13 +24,15 @@ export function AuthProvider({ children }) {
   // Funzione di login 
   const login = (token, userData) => {
     localStorage.setItem('token', token)
+    localStorage.setItem('user', JSON.stringify(userData))
     setUser(userData)
     setIsLogged(true)
   }
 
-  // Funzione di login
+  // Funzione di logout
   const logout = () => {
     localStorage.removeItem('token')
+    localStorage.removeItem('user')
     setUser(null)
     setIsLogged(false)
   }

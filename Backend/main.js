@@ -16,7 +16,6 @@ server.use(
       const allowedOrigins = [
         "http://localhost:5173",
         process.env.CLIENT_URL,
-        "https://flowbix-6j94nb7el-anna25.vercel.app"
       ];
       
       if (!origin || allowedOrigins.includes(origin)) {

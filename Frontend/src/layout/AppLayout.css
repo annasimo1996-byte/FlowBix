@@ -1,5 +1,7 @@
+/* 📱 STRUTTURA BASE: MOBILE-FIRST (Schermi piccoli) */
 .screenContainer {
   display: flex;
+  flex-direction: column; /* Su mobile gli elementi vanno dall'alto in basso */
   width: 100vw;
   height: 100vh;
   overflow: hidden;
@@ -10,13 +12,28 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  height: 100vh;
+  height: 100%;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: auto; /* Consente lo scorrimento dei contenuti interni della pagina */
 }
 
 .pageDynamicArea {
   flex: 1;
-  padding: 2rem;
+  padding: 1rem; /* Padding ridotto su mobile per non comprimere i box */
   background-color: #0d0e12;
+}
+
+/* 🖥️ MEDIA QUERY: DA TABLET/DESKTOP IN SU (Da 992px) */
+@media (min-width: 992px) {
+  .screenContainer {
+    flex-direction: row; /* Ripristina l'affiancamento Sidebar + Contenuti */
+  }
+
+  .rightContentWrapper {
+    height: 100vh;
+  }
+
+  .pageDynamicArea {
+    padding: 2rem; /* Ripristina lo spazio ampio solo dove c'è schermo a sufficienza */
+  }
 }

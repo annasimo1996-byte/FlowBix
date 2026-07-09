@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import './Navbar.css' 
 
-function Navbar() {
+function Navbar({ onToggleSidebar }) {
   const location = useLocation()
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef(null)
@@ -37,8 +37,7 @@ function Navbar() {
 
   const mockUser = {
     name: 'Anna Moreau',
-    role: 'Pro plan',
-    avatarUrl: null 
+    avatarUrl: null,
   }
 
   const getInitials = (name) => {
@@ -52,14 +51,16 @@ function Navbar() {
 
   const handleLogout = () => {
     console.log("Esecuzione logout...")
-    // Collegamento della funzione AuthContext
   }
 
   return (
     <header className="navbarContainer">
       
-      {/*Titolo della pagina*/}
-      <div>
+      {/*Menu Hamburger */}
+      <div className="navbarLeftSection">
+        <button className="hamburgerBtn" onClick={onToggleSidebar} title="Apri menu">
+          <i className="bi bi-list" />
+        </button>
         <h1 className="navbarTitle">{getPageTitle(location.pathname)}</h1>
       </div>
 
@@ -76,17 +77,15 @@ function Navbar() {
       {/*Notifiche e informazioni utente */}
       <div className="navbarRight">
         
-        {/* Pulsante notifiche */}
         <button className="notificationBtn" title="Notifiche">
           <i className="bi bi-bell-fill" />
           <span className="notificationBadge" />
         </button>
 
-        {/* Contenitore Dropdown con Ref di controllo */}
+        {/* Contenitore Dropdown */}
         <div className="userDropdownWrapper" ref={dropdownRef}>
         
           <div className="userDropdownTrigger" onClick={() => setDropdownOpen(!dropdownOpen)}>
-            
             
             <div className="avatarCircle">
               {mockUser.avatarUrl ? (
@@ -100,22 +99,20 @@ function Navbar() {
               )}
             </div>
 
-            {/* Nome  e ruolo */}
-            <div className="userInfoText d-none d-sm-flex flex-column">
+            {/* Nome utente*/}
+            <div className="userInfoText">
               <span className="userProfileName">{mockUser.name}</span>
-              <span className="userProfileRole">{mockUser.role}</span>
             </div>
 
-            <i className={`bi bi-chevron-down dropdownArrow d-none d-sm-block transitionArrow ${dropdownOpen ? 'rotate' : ''}`} />
+            <i className={`bi bi-chevron-down dropdownArrow transitionArrow ${dropdownOpen ? 'rotate' : ''}`} />
           </div>
 
           {/* Menu Dropdown */}
           {dropdownOpen && (
             <div className="customDropdownMenu">
-              <div className="dropdownHeader d-sm-none">
-                <div className="fw-semibold text-white">{mockUser.name}</div>
-                <div className="small text-muted">{mockUser.role}</div>
-                <hr className="my-2 border-secondary" />
+              <div className="dropdownHeaderResponsive">
+                <div className="dropdownUserName">{mockUser.name}</div>
+                <hr className="dropdownMenuDivider" />
               </div>
               <button className="dropdownItem">
                 <i className="bi bi-person me-2" /> Profile

@@ -12,10 +12,19 @@ const PORT = process.env.PORT;
 server.use(express.json()); 
 server.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      process.env.CLIENT_URL
-    ],
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        "http://localhost:5173",
+        process.env.CLIENT_URL,
+        "https://flowbix-6j94nb7el-anna25.vercel.app"
+      ];
+      
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   })
 );

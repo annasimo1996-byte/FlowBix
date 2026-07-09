@@ -12,7 +12,10 @@ const PORT = process.env.PORT;
 server.use(express.json()); 
 server.use(
   cors({
-    origin: true, // Accetta qualsiasi origine dinamicamente durante i test
+    origin: [
+      "http://localhost:5173",
+      "https://flowbix-6j94nb7el-anna25.vercel.app" // Inserito fisso per prova
+    ],
     credentials: true,
   })
 );

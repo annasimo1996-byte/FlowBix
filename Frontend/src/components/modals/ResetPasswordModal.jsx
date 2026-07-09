@@ -21,13 +21,13 @@ function ResetPasswordModal({ show, onHide }) {
                 body: JSON.stringify({ email: resetEmail }),
             })
 
-            const data = await response.json()
+            const data = await response.json().catch(() => ({}))
 
             if (!response.ok) {
-                throw new Error(data.message || "Unable to send the reset email.")
+                throw new Error(data.message || "No user found with this email or server error.")
             }
 
-            setModalMessage({ text: data.message, isError: false })
+            setModalMessage({ text: data.message || "Reset link successfully sent to your email!", isError: false })
             setResetEmail('')
         } catch (error) {
             setModalMessage({ text: error.message, isError: true })

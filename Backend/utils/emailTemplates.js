@@ -1,4 +1,3 @@
-// utils/emailTemplates.js
 const getResetPasswordTemplate = (resetUrl) => {
   return `
     <div style="font-family: sans-serif; padding: 20px; max-width: 600px;">

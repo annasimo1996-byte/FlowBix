@@ -5,7 +5,7 @@ const startDb = require("./config/db.js");
 const usersRoute = require("./modules/users/usersRoute.js");
 const authRoute = require("./modules/auth/authRoute.js");
 const errorHandler = require("./middlewares/errorHandler.js");
-//const clientsRoute = require("./modules/clients/clientsRoute.js")
+const clientsRoute = require("./modules/clients/clientsRoute.js")
 const server = express();
 const PORT = process.env.PORT;
 
@@ -29,7 +29,7 @@ server.get("/", (req, res) => {
 });
 
 server.use("/users", usersRoute);
-//server.use("/clients", clientsRoute)
+server.use("/clients", clientsRoute)
 server.use("/auth", authRoute);
 
 server.use(errorHandler);

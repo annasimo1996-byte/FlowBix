@@ -90,6 +90,7 @@ const login = async (req, res, next) => {
 
 // RICHIESTA DI RECUPERO PASSWORD
 const forgotPassword = async (req, res, next) => {
+  console.log("-> Ricevuta richiesta forgotPassword per email:", req.body.email);
   try {
     const { email } = req.body;
     if (!email) {
@@ -129,7 +130,9 @@ const forgotPassword = async (req, res, next) => {
     };
 
     //Invio email 
+    console.log("-> Tentativo di invio email con Nodemailer...");
     await transporter.sendMail(mailOptions);
+    console.log("-> Email inviata con successo!");
 
     res.status(200).json({
       message: "Reset link successfully sent to your email!",

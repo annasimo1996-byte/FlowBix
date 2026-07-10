@@ -95,3 +95,9 @@ function ResetPasswordPage() {
 }
 
 export default ResetPasswordPage*/
+
+function ResetPasswordModal({ show, onHide }) {
+    return null; // Non mostra nulla ma non rompe gli import
+}
+
+export default ResetPasswordModal;

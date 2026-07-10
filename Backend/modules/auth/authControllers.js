@@ -209,7 +209,5 @@ const oauthCallback = (req, res, next) => {
 module.exports = {
   register,
   login,
-  forgotPassword,
-  resetPassword,
   oauthCallback,
 };

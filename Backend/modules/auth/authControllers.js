@@ -89,7 +89,7 @@ const login = async (req, res, next) => {
 };
 
 // RICHIESTA DI RECUPERO PASSWORD
-const forgotPassword = async (req, res, next) => {
+/*const forgotPassword = async (req, res, next) => {
   console.log("-> Ricevuta richiesta forgotPassword per email:", req.body.email);
   try {
     const { email } = req.body;
@@ -174,7 +174,7 @@ const resetPassword = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-};
+};*/
 
 // CALLBACK PER OAUTH (GOOGLE & GITHUB)
 const oauthCallback = (req, res, next) => {

@@ -169,13 +169,13 @@ function LoginPage() {
                       <label className="form-check-label small text-white-50" htmlFor="remember">Remember me</label>
                     </div>
                     
-                    <button 
+                    {/*<button 
                       type="button" 
                       onClick={() => setShowResetModal(true)} 
                       className={`${styles.brandPurpleText} btn btn-link p-0 small text-decoration-none fw-medium align-baseline border-0 bg-transparent`}
                     >
                       Forgot password?
-                    </button>
+                    </button>*/}
                   </div>
                   
                   <button type="submit" className="btn btn-primary-custom w-100 rounded-3 py-1.5 fw-bold" disabled={isLoading}>

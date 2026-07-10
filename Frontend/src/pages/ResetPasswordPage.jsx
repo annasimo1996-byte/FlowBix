@@ -96,8 +96,8 @@ function ResetPasswordPage() {
 
 export default ResetPasswordPage*/
 
-function ResetPasswordModal({ show, onHide }) {
-    return null; // Non mostra nulla ma non rompe gli import
+function ResetPasswordPage() {
+    return null; // Componente stub valido per la build, mantiene l'export corretto
 }
 
-export default ResetPasswordModal;
+export default ResetPasswordPage;

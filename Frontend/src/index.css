@@ -114,3 +114,30 @@ body {
     0 2px 4px rgba(0, 0, 0, 0.4),
     0 4px 14px rgba(124, 107, 255, 0.4) !important;
 }
+
+/*Intestazione della sezione*/
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.section-header-titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.section-header h2 {
+  font-size: 1.8rem;
+  color: #ffffff;
+  margin: 0 0 0.25rem 0;
+}
+
+.section-header p {
+  color: #b0b0c0;
+  margin: 0;
+  font-size: 0.95rem;
+}

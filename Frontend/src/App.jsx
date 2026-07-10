@@ -4,10 +4,10 @@ import { AuthContext } from './context/AuthContext'
 
 import LoginPage from './pages/LoginPage'
 import DashboardView from './pages/DashboardView'
-import ClientiView from './pages/ClientiView'
+import ClientsView from './pages/ClientsView'
 import AppuntamentiView from './pages/AppuntamentiView'
 import SpeseRicaviView from './pages/FinanzeView'
-import ResetPasswordPage from "./pages/ResetPasswordPage"
+//import ResetPasswordPage from "./pages/ResetPasswordPage"
 
 import AppLayout from './layout/AppLayout'
 
@@ -31,7 +31,7 @@ function App() {
           element={isLogged ? <AppLayout /> : <Navigate to="/login" />}
         >
           <Route path="/" element={<DashboardView />} />
-          <Route path="/clienti" element={<ClientiView />} />
+          <Route path="/clients" element={<ClientsView />} />
           <Route path="/appuntamenti" element={<AppuntamentiView />} />
           <Route path="/spese-ricavi" element={<SpeseRicaviView />} />
         </Route>

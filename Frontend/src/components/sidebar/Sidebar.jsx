@@ -4,7 +4,7 @@ import Logo from '../brand/Logo'
 
 const MENU_ITEMS = [
   { path: '/', label: 'Home', icon: 'bi-grid-1x2-fill' },
-  { path: '/clienti', label: 'Clients', icon: 'bi-people-fill' },
+  { path: '/clients', label: 'Clients', icon: 'bi-people-fill' },
   { path: '/appuntamenti', label: 'Appointments', icon: 'bi-calendar-week-fill' },
   { path: '/spese-ricavi', label: 'Finance', icon: 'bi-wallet2' },
 ]
@@ -17,7 +17,7 @@ function Sidebar({ isOpen, onClose }) {
       <aside className={`sidebarContainer ${isOpen ? 'sidebarOpen' : ''}`}>
         
         <div className="sidebarTopContent">
-          {/* Lobo e chiusura da mobile*/}
+          {/*Logo e chiusura da mobile*/}
           <div className="sidebarHeader">
             <div className="sidebarLogo">
               <Logo />

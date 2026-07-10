@@ -12,10 +12,21 @@ const PORT = process.env.PORT;
 server.use(express.json()); 
 server.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      process.env.CLIENT_URL
-    ],
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        "http://localhost:5173",
+        "http://localhost:9998",
+        process.env.CLIENT_URL,
+      ];
+      
+      // Permetti richieste senza origin (es. Postman o health check) o se il dominio è esplicitamente nell'array
+      // Oppure se l'origine contiene "vercel.app" (così accetta qualsiasi tua anteprima)
+      if (!origin || allowedOrigins.includes(origin) || origin.includes("vercel.app")) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   })
 );

@@ -2,8 +2,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const userService = require("../users/usersService.js");
+const nodemailer = require("nodemailer");
+const { getResetPasswordTemplate } = require("../../utils/emailTemplates.js");
 
-// Importiamo le eccezioni personalizzate
 const BadRequestException = require("../../exception/BadRequestException.js");
 const NotFoundException = require("../../exception/NotFoundException");
 
@@ -12,7 +13,6 @@ const register = async (req, res, next) => {
   try {
     const { firstName, lastName, email, password } = req.body;
 
-    // Controllo campi obbligatori di base
     if (!firstName || !lastName || !email || !password) {
       throw new BadRequestException("All fields (firstName, lastName, email, password) are required");
     }
@@ -32,9 +32,17 @@ const register = async (req, res, next) => {
       password: hashedPassword,
     });
 
-    res.status(201).json({ message: "User registered successfully!", user: newUser });
+    res.status(201).json({
+      message: "User registered successfully!",
+      user: {
+        id: newUser._id,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        email: newUser.email
+      }
+    });
   } catch (error) {
-    next(error); 
+    next(error);
   }
 };
 
@@ -58,12 +66,11 @@ const login = async (req, res, next) => {
     }
 
     const token = jwt.sign(
-      { 
-        id: user._id, 
-        email: user.email 
-      }, 
+      {
+        id: user._id
+      },
       process.env.JWT_SECRET || "super_secret_key_backup",
-      { expiresIn: "24h" } 
+      { expiresIn: "24h" }
     );
 
     res.status(200).json({
@@ -83,6 +90,7 @@ const login = async (req, res, next) => {
 
 // RICHIESTA DI RECUPERO PASSWORD
 const forgotPassword = async (req, res, next) => {
+  console.log("-> Ricevuta richiesta forgotPassword per email:", req.body.email);
   try {
     const { email } = req.body;
     if (!email) {
@@ -94,16 +102,40 @@ const forgotPassword = async (req, res, next) => {
       throw new NotFoundException("No user found with this email");
     }
 
+    //Token casuale che scade in 1h
     const resetToken = crypto.randomBytes(20).toString("hex");
-
     user.resetPasswordToken = resetToken;
     user.resetPasswordExpires = Date.now() + 3600000;
 
     await user.save();
 
+    //Configurazione Nodemailer
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    //Link per il reset che punta al frontend
+    const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
+    const resetUrl = `${CLIENT_URL}/reset-password?token=${resetToken}`;
+
+    const mailOptions = {
+      from: `"FlowBix Team" <${process.env.EMAIL_USER}>`,
+      to: user.email,
+      subject: "Password Reset Request - FlowBix",
+      html: getResetPasswordTemplate(resetUrl),
+    };
+
+    //Invio email 
+    console.log("-> Tentativo di invio email con Nodemailer...");
+    await transporter.sendMail(mailOptions);
+    console.log("-> Email inviata con successo!");
+
     res.status(200).json({
-      message: "Reset token successfully generated!",
-      resetToken, 
+      message: "Reset link successfully sent to your email!",
     });
   } catch (error) {
     next(error);
@@ -113,23 +145,21 @@ const forgotPassword = async (req, res, next) => {
 // RECUPERO PASSWORD
 const resetPassword = async (req, res, next) => {
   try {
-    const { token } = req.params;
-    const { password } = req.body;
+    const { token } = req.params; // Estrae il token dall'URL
+    const { password } = req.body; // Prende la nuova password inviata dal frontend
 
     if (!password) {
-      throw new BadRequestException("New password is required");
+      throw new BadRequestException("Password is required");
     }
 
-    const User = require("../users/usersSchema.js"); 
-    const user = await User.findOne({
-      resetPasswordToken: token,
-      resetPasswordExpires: { $gt: Date.now() },
-    });
+    // 1. Cerca l'utente che ha quel token e controlla che non sia scaduto
+    const user = await userService.findUserByResetToken(token);
 
-    if (!user) {
-      throw new BadRequestException("The reset token is invalid or expired");
+    if (!user || user.resetPasswordExpires < Date.now()) {
+      throw new BadRequestException("The reset token is invalid or has expired.");
     }
 
+    //Hashing della nuova password
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
 
@@ -138,7 +168,9 @@ const resetPassword = async (req, res, next) => {
 
     await user.save();
 
-    res.status(200).json({ message: "Password updated successfully! You can now log in." });
+    res.status(200).json({
+      message: "Password updated successfully!",
+    });
   } catch (error) {
     next(error);
   }
@@ -152,10 +184,9 @@ const oauthCallback = (req, res, next) => {
     }
 
     const token = jwt.sign(
-      { 
-        id: req.user._id, 
-        email: req.user.email 
-      }, 
+      {
+        id: req.user._id
+      },
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
@@ -163,7 +194,12 @@ const oauthCallback = (req, res, next) => {
     res.status(200).json({
       message: "Social authentication completed successfully!",
       token,
-      user: req.user
+      user: {
+        id: req.user._id,
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
+        email: req.user.email
+      }
     });
   } catch (error) {
     next(error);

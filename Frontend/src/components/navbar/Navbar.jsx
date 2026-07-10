@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import { useLocation } from 'react-router-dom'
+import { AuthContext } from '../../context/AuthContext'
 import './Navbar.css' 
 
 function Navbar({ onToggleSidebar }) {
   const location = useLocation()
+  const { user, logout } = useContext(AuthContext)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef(null)
 
@@ -34,29 +36,18 @@ function Navbar({ onToggleSidebar }) {
         return 'FlowBix' 
     }
   }
+  const currentUserName = user ? `${user.firstName} ${user.lastName}` : 'User'
 
-  const mockUser = {
-    name: 'Anna Moreau',
-    avatarUrl: null,
-  }
-
-  const getInitials = (name) => {
-    if (!name) return '??'
-    const parts = name.split(' ')
-    if (parts.length >= 2) {
-      return `${parts[0][0]}${parts[1][0]}`.toUpperCase()
-    }
-    return name.slice(0, 2).toUpperCase()
-  }
-
-  const handleLogout = () => {
-    console.log("Esecuzione logout...")
+  //Iniziali utente
+  const getInitials = (firstName, lastName) => {
+    if (!firstName || !lastName) return 'U'
+    return `${firstName[0]}${lastName[0]}`.toUpperCase()
   }
 
   return (
     <header className="navbarContainer">
       
-      {/*Menu Hamburger */}
+      {/* Menu Hamburger */}
       <div className="navbarLeftSection">
         <button className="hamburgerBtn" onClick={onToggleSidebar} title="Apri menu">
           <i className="bi bi-list" />
@@ -64,7 +55,7 @@ function Navbar({ onToggleSidebar }) {
         <h1 className="navbarTitle">{getPageTitle(location.pathname)}</h1>
       </div>
 
-      {/*Input di ricerca*/}
+      {/* Input di ricerca */}
       <div className="navbarSearchWrapper">
         <i className="bi bi-search navbarSearchIcon" />
         <input 
@@ -74,7 +65,7 @@ function Navbar({ onToggleSidebar }) {
         />
       </div>
 
-      {/*Notifiche e informazioni utente */}
+      {/* Notifiche e informazioni utente */}
       <div className="navbarRight">
         
         <button className="notificationBtn" title="Notifiche">
@@ -88,20 +79,20 @@ function Navbar({ onToggleSidebar }) {
           <div className="userDropdownTrigger" onClick={() => setDropdownOpen(!dropdownOpen)}>
             
             <div className="avatarCircle">
-              {mockUser.avatarUrl ? (
+              {user?.avatarUrl ? (
                 <img 
-                  src={mockUser.avatarUrl} 
-                  alt={mockUser.name} 
+                  src={user.avatarUrl} 
+                  alt={currentUserName} 
                   className="avatarImage" 
                 />
               ) : (
-                <span>{getInitials(mockUser.name)}</span>
+                <span>{getInitials(user?.firstName, user?.lastName)}</span>
               )}
             </div>
 
-            {/* Nome utente*/}
+            {/* Nome utente dinamico */}
             <div className="userInfoText">
-              <span className="userProfileName">{mockUser.name}</span>
+              <span className="userProfileName">{currentUserName}</span>
             </div>
 
             <i className={`bi bi-chevron-down dropdownArrow transitionArrow ${dropdownOpen ? 'rotate' : ''}`} />
@@ -111,7 +102,7 @@ function Navbar({ onToggleSidebar }) {
           {dropdownOpen && (
             <div className="customDropdownMenu">
               <div className="dropdownHeaderResponsive">
-                <div className="dropdownUserName">{mockUser.name}</div>
+                <div className="dropdownUserName">{currentUserName}</div>
                 <hr className="dropdownMenuDivider" />
               </div>
               <button className="dropdownItem">
@@ -121,7 +112,8 @@ function Navbar({ onToggleSidebar }) {
                 <i className="bi bi-gear me-2" /> Settings
               </button>
               <hr className="dropdownDivider" />
-              <button className="dropdownItem logoutItem" onClick={handleLogout}>
+              {/*logout */}
+              <button className="dropdownItem logoutItem" onClick={logout}>
                 <i className="bi bi-box-arrow-right me-2" /> Logout
               </button>
             </div>

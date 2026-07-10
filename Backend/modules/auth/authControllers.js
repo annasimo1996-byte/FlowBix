@@ -145,10 +145,10 @@ const forgotPassword = async (req, res, next) => {
 // RECUPERO PASSWORD
 const resetPassword = async (req, res, next) => {
   try {
-    const { token } = req.params; // Estrae il token dall'URL
+    const { token } = req.params;// Estrae il token dall'URL
     const { password } = req.body; // Prende la nuova password inviata dal frontend
 
-    if (!password) {
+    if (!password || !token ) {
       throw new BadRequestException("Password is required");
     }
 

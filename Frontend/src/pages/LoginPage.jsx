@@ -6,7 +6,6 @@ import Logo from '../components/brand/Logo'
 
 import SocialButtons from '../components/common/SocialButtons'
 import Divider from '../components/common/Divider'
-import ResetPasswordModal from '../components/modals/ResetPasswordModal' 
 
 const FLOW_STEPS = [
   { icon: 'bi-people-fill', label: 'Clients', color: '#4d9fe8' },

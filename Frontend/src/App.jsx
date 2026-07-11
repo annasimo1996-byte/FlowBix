@@ -38,8 +38,6 @@ function App() {
 
         {/* Rotta di fallback*/}
         <Route path="*" element={<Navigate to="/" />} />
-
-        {/*<Route path="/reset-password" element={<ResetPasswordPage />} />*/}
         
       </Routes>
     </BrowserRouter>

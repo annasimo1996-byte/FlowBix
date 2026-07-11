@@ -2,7 +2,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const userService = require("../users/usersService.js");
-const nodemailer = require("nodemailer");
 const { getResetPasswordTemplate } = require("../../utils/emailTemplates.js");
 
 const BadRequestException = require("../../exception/BadRequestException.js");

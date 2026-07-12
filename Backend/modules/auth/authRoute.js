@@ -1,7 +1,7 @@
 const express = require("express");
 const authRouter = express.Router();
 const passport = require("passport");
-const { register, login, forgotPassword, resetPassword, oauthCallback } = require("./authControllers.js");
+const { register, login, oauthCallback } = require("./authControllers.js");
 require("../../config/passport.js");
 
 //Registrazione

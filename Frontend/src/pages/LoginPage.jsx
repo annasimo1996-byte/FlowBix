@@ -221,8 +221,6 @@ function LoginPage() {
         </div>
       </div>
 
-      <ResetPasswordModal show={showResetModal} onHide={() => setShowResetModal(false)} />
-
     </div>
   )
 }

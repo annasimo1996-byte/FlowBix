@@ -7,7 +7,6 @@ import DashboardView from './pages/DashboardView'
 import ClientsView from './pages/ClientsView'
 import AppuntamentiView from './pages/AppuntamentiView'
 import SpeseRicaviView from './pages/FinanzeView'
-//import ResetPasswordPage from "./pages/ResetPasswordPage"
 
 import AppLayout from './layout/AppLayout'
 

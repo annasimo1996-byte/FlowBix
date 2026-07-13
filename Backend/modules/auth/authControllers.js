@@ -67,7 +67,7 @@ const login = async (req, res, next) => {
       {
         id: user._id
       },
-      process.env.JWT_SECRET || "super_secret_key_backup",
+      process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
 

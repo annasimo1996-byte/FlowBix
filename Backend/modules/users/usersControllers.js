@@ -47,6 +47,18 @@ const createUser = async (req, res, next) => {
   }
 };
 
+//CONTROLLO DEL TOKEN CORRENTE
+const getMyProfile = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      throw new NotFoundException("User not found!");
+    }
+    res.status(200).json(req.user);
+  } catch (error) {
+    next(error);
+  }
+};
+
 //AGGIORNA UN UTENTE
 const updateUser = async (req, res, next) => {
   try {
@@ -77,6 +89,7 @@ module.exports = {
   getAllUsers,
   getUserById,
   createUser,
+  getMyProfile,
   updateUser,
   deleteUser,
 };

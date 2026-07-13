@@ -87,7 +87,7 @@ const ClientsView = () => {
                   <th>Email</th>
                   <th>Telefono</th>
                   <th>Azienda</th>
-                  <th>Commenti</th>
+                  <th>Note</th>
                   <th>Azioni</th>
                 </tr>
               </thead>
@@ -161,7 +161,7 @@ const ClientsView = () => {
                     <p><span>Email:</span> <span className="card-val" title={client.email}>{client.email || "-"}</span></p>
                     <p><span>Telefono:</span> <span className="card-val" title={client.phone}>{client.phone || "-"}</span></p>
                     <p><span>Azienda:</span> <span className="card-val" title={client.company}>{client.company || "-"}</span></p>
-                    <p><span>Commenti:</span> <span className="card-val" title={client.notes}>{client.notes || "-"}</span></p>
+                    <p><span>Note:</span> <span className="card-val" title={client.notes}>{client.notes || "-"}</span></p>
                   </div>
                 </div>
               ))

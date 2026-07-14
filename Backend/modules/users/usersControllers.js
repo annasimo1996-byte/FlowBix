@@ -1,3 +1,4 @@
+const bcrypt = require("bcryptjs");
 const userService = require("./usersService.js");
 
 const BadRequestException = require("../../exception/BadRequestException");
@@ -40,8 +41,38 @@ const createUser = async (req, res, next) => {
       throw new BadRequestException("This email is already registered");
     }
 
-    const newUser = await userService.createUser({ firstName, lastName, email, password });
+    // Applicazione dell'hashing della password per sicurezza
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    let newUser;
+    try {
+      newUser = await userService.createUser({ 
+        firstName, 
+        lastName, 
+        email, 
+        password: hashedPassword 
+      });
+    } catch (dbError) {
+      if (dbError.code === 11000) {
+        throw new BadRequestException("This email is already registered");
+      }
+      throw dbError;
+    }
+
     res.status(201).json(newUser);
+  } catch (error) {
+    next(error);
+  }
+};
+
+//CONTROLLO DEL TOKEN CORRENTE
+const getMyProfile = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      throw new NotFoundException("User not found!");
+    }
+    res.status(200).json(req.user);
   } catch (error) {
     next(error);
   }
@@ -77,6 +108,7 @@ module.exports = {
   getAllUsers,
   getUserById,
   createUser,
+  getMyProfile,
   updateUser,
   deleteUser,
 };

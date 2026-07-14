@@ -1,4 +1,4 @@
-function AppuntamentiView() {
+function AppointmentsView() {
   return (
     <div className="container-fluid pt-3">
       <h2>Scadenze e Appuntamenti</h2>
@@ -10,4 +10,4 @@ function AppuntamentiView() {
   )
 }
 
-export default AppuntamentiView
+export default AppointmentsView

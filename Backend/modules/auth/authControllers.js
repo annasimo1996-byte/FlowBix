@@ -23,12 +23,20 @@ const register = async (req, res, next) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = await userService.createUser({
-      firstName,
-      lastName,
-      email,
-      password: hashedPassword,
-    });
+    let newUser;
+    try {
+      newUser = await userService.createUser({
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+      });
+    } catch (dbError) {
+      if (dbError.code === 11000) {
+        throw new BadRequestException("This email's already registered");
+      }
+      throw dbError;
+    }
 
     res.status(201).json({
       message: "User registered successfully!",
@@ -58,6 +66,10 @@ const login = async (req, res, next) => {
       throw new BadRequestException("Invalid credentials");
     }
 
+    if (!user.password) {
+      throw new BadRequestException("This account uses social login. Please sign in with Google or GitHub.");
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       throw new BadRequestException("Invalid credentials");
@@ -67,7 +79,7 @@ const login = async (req, res, next) => {
       {
         id: user._id
       },
-      process.env.JWT_SECRET || "super_secret_key_backup",
+      process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
 
@@ -101,16 +113,9 @@ const oauthCallback = (req, res, next) => {
       { expiresIn: "24h" }
     );
 
-    res.status(200).json({
-      message: "Social authentication completed successfully!",
-      token,
-      user: {
-        id: req.user._id,
-        firstName: req.user.firstName,
-        lastName: req.user.lastName,
-        email: req.user.email
-      }
-    });
+    // Reindirizzamento al frontend passando il token nella query string
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    res.redirect(`${frontendUrl}/login?token=${token}`);
   } catch (error) {
     next(error);
   }

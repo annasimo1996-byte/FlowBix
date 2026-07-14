@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { sendRequest } from "../../utils/api";
 import "./NewClientModal.css";
 
@@ -12,8 +12,19 @@ const NewClientModal = ({ isOpen, onClose, clientToEdit, onClientSaved }) => {
     });
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState(null);
+    
+    // Riferimento per gestire l'AbortController ed evitare race condition/stale state
+    const abortControllerRef = useRef(null);
 
-    //Form compilato per la modifica
+    // Cleanup alla chiusura o smontaggio del componente
+    useEffect(() => {
+        return () => {
+            if (abortControllerRef.current) {
+                abortControllerRef.current.abort();
+            }
+        };
+    }, []);
+
     useEffect(() => {
         if (clientToEdit) {
             setFormData({
@@ -44,37 +55,34 @@ const NewClientModal = ({ isOpen, onClose, clientToEdit, onClientSaved }) => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setSubmitting(true);
         setError(null);
 
-        // Se l'Id esiste fa il PUT altrimenti un POST
+        // Inizializza un nuovo AbortController per questa specifica sottomissione
+        abortControllerRef.current = new AbortController();
+
         const isEditing = Boolean(clientToEdit && clientToEdit._id);
         const url = isEditing ? `/clients/${clientToEdit._id}` : "/clients";
         const method = isEditing ? "PUT" : "POST";
 
-        sendRequest(url, {
-            method: method,
-            body: JSON.stringify(formData),
-        })
-            .then((savedClient) => {
-                onClientSaved(savedClient, isEditing);
-                setFormData({ 
-                    name: "", 
-                    email: "", 
-                    phone: "", 
-                    company: "", 
-                    notes: "" 
-                });
-                onClose();
-            })
-            .catch((err) => {
-                setError(err.message);
-            })
-            .finally(() => {
-                setSubmitting(false);
+        try {
+            const savedClient = await sendRequest(url, {
+                method: method,
+                body: JSON.stringify(formData),
+                signal: abortControllerRef.current.signal,
             });
+
+            onClientSaved(savedClient, isEditing);
+            setFormData({ name: "", email: "", phone: "", company: "", notes: "" });
+            onClose();
+        } catch (err) {
+            if (err.name === "AbortError") return; // Ignora se la chiamata è stata abortita
+            setError(err.message);
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (

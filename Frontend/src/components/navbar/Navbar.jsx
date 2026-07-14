@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react'
 import { useLocation } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthContext'
-import './Navbar.css' 
+import './Navbar.css'
 
 function Navbar({ onToggleSidebar }) {
   const location = useLocation()
@@ -33,7 +33,7 @@ function Navbar({ onToggleSidebar }) {
       case '/settings':
         return 'Settings'
       default:
-        return 'FlowBix' 
+        return 'FlowBix'
     }
   }
   const currentUserName = user ? `${user.firstName} ${user.lastName}` : 'User'
@@ -46,7 +46,7 @@ function Navbar({ onToggleSidebar }) {
 
   return (
     <header className="navbarContainer">
-      
+
       {/* Menu Hamburger */}
       <div className="navbarLeftSection">
         <button className="hamburgerBtn" onClick={onToggleSidebar} title="Apri menu">
@@ -58,16 +58,16 @@ function Navbar({ onToggleSidebar }) {
       {/* Input di ricerca */}
       <div className="navbarSearchWrapper">
         <i className="bi bi-search navbarSearchIcon" />
-        <input 
-          type="text" 
-          className="navbarSearchInput" 
-          placeholder="Search clients, appointments..." 
+        <input
+          type="text"
+          className="navbarSearchInput"
+          placeholder="Search clients, appointments..."
         />
       </div>
 
       {/* Notifiche e informazioni utente */}
       <div className="navbarRight">
-        
+
         <button className="notificationBtn" title="Notifiche">
           <i className="bi bi-bell-fill" />
           <span className="notificationBadge" />
@@ -75,15 +75,16 @@ function Navbar({ onToggleSidebar }) {
 
         {/* Contenitore Dropdown */}
         <div className="userDropdownWrapper" ref={dropdownRef}>
-        
-          <div className="userDropdownTrigger" onClick={() => setDropdownOpen(!dropdownOpen)}>
-            
+
+          <div className="userDropdownTrigger"
+            onClick={() => setDropdownOpen((prev) => !prev)}>
+
             <div className="avatarCircle">
               {user?.avatarUrl ? (
-                <img 
-                  src={user.avatarUrl} 
-                  alt={currentUserName} 
-                  className="avatarImage" 
+                <img
+                  src={user.avatarUrl}
+                  alt={currentUserName}
+                  className="avatarImage"
                 />
               ) : (
                 <span>{getInitials(user?.firstName, user?.lastName)}</span>

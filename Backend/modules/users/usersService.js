@@ -1,11 +1,21 @@
 const User = require("./usersSchema.js");
+const mongoose = require("mongoose");
+const BadRequestException = require("../../exception/BadRequestException");
+const NotFoundException = require("../../exception/NotFoundException");
 
 const findUsers = async () => {
   return await User.find().select("-password");
 };
 
 const findUserById = async (id) => {
-  return await User.findById(id).select("-password");
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new BadRequestException("Invalid user ID format.");
+  }
+  const user = await User.findById(id).select("-password");
+  if (!user) {
+    throw new NotFoundException("User not found.");
+  }
+  return user;
 };
 
 const findUserByEmail = async (email) => {
@@ -22,15 +32,30 @@ const createUser = async (userData) => {
 };
 
 const updateUser = async (id, updateData) => {
-  return await User.findByIdAndUpdate(
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new BadRequestException("Invalid user ID format.");
+  }
+  const updatedUser = await User.findByIdAndUpdate(
     id,
     updateData,
     { new: true, runValidators: true }
   ).select("-password");
+
+  if (!updatedUser) {
+    throw new NotFoundException("User not found.");
+  }
+  return updatedUser;
 };
 
 const deleteUser = async (id) => {
-  return await User.findByIdAndDelete(id);
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new BadRequestException("Invalid user ID format.");
+  }
+  const deletedUser = await User.findByIdAndDelete(id);
+  if (!deletedUser) {
+    throw new NotFoundException("User not found.");
+  }
+  return deletedUser;
 };
 
 module.exports = {

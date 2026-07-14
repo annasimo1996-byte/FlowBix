@@ -1,38 +1,57 @@
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 export const sendRequest = async (endpoint, options = {}) => {
-
-    //Se c'è il token memorizza
+    // Estraiamo skipAuth per evitare di aggiungere il token nelle rotte pubbliche
+    const { skipAuth = false, ...fetchOptions } = options;
     const token = localStorage.getItem("token");
 
-    //Preparo gli headers evitando di sovrascrivere eventuali altri dati passatti
     const headers = {
         "Content-Type": "application/json",
-        ...options.headers,
+        ...fetchOptions.headers,
     };
 
-    //Sei il token esiste aggiunge la riga Authorization
-    if (token) {
+    if (!skipAuth && token) {
         headers["Authorization"] = `Bearer ${token}`;
     }
 
-    //Unisce tutte le opzioni agli headers
     const config = {
-        ...options,
+        ...fetchOptions,
         headers,
     };
 
-    //Esecuzione della fetch
     const response = await fetch(`${VITE_API_URL}${endpoint}`, config);
 
-
-
     if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || "Something went wrong!");
+        const contentType = response.headers.get("content-type");
+        let errorData = {};
+
+        if (contentType && contentType.includes("application/json")) {
+            errorData = await response.json().catch(() => ({}));
+        } else {
+            const text = await response.text().catch(() => "");
+            errorData = { message: text || `Request failed (${response.status})` };
+        }
+
+        const apiError = new Error(errorData.message || `Request failed (${response.status})`);
+        apiError.status = response.status;
+        apiError.data = errorData;
+        
+        throw apiError;
     }
 
     if (response.status === 204) return null;
-    return await response.json();
-}; 
 
+    const textData = await response.text();
+    if (!textData.trim()) return null;
+
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+        try {
+            return JSON.parse(textData);
+        } catch {
+            return textData;
+        }
+    }
+
+    return textData;
+};

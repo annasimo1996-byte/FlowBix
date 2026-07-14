@@ -1,6 +1,7 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect, useRef } from 'react'
 import { Tab, Nav } from 'react-bootstrap'
 import { AuthContext } from '../context/AuthContext'
+import { sendRequest } from '../utils/api'
 import styles from './LoginPage.module.css' 
 import Logo from '../components/brand/Logo'
 
@@ -22,57 +23,47 @@ function LoginPage() {
 
   const [errorMessage, setErrorMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-
-  const [showResetModal, setShowResetModal] = useState(false)
-
+  
+  const isMountedRef = useRef(true)
   const { login } = useContext(AuthContext)
+
+  useEffect(() => {
+    isMountedRef.current = true
+    return () => {
+      isMountedRef.current = false
+    }
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setErrorMessage('')
     setIsLoading(true)
 
-    const BASE_URL = import.meta.env.VITE_API_URL 
-
     try {
       if (tab === 'login') {
-        const response = await fetch(`${BASE_URL}/auth/login`, {
+        const data = await sendRequest('/auth/login', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password }),
+          skipAuth: true, // Chiamata pubblica
         })
-
-        if (!response.ok) {
-          const contentType = response.headers.get("content-type")
-          if (contentType && contentType.includes("application/json")) {
-            const data = await response.json()
-            throw new Error(data.message || 'Invalid credentials')
-          } else {
-            throw new Error(`Server error (${response.status}). Check the connection.`)
-          }
-        }
-
-        const data = await response.json()
+        if (!isMountedRef.current) return
         login(data.token, data.user)
       } else {
-        const response = await fetch(`${BASE_URL}/auth/register`, {
+        await sendRequest('/auth/register', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ firstName, lastName, email, password }),
+          skipAuth: true, // Chiamata pubblica
         })
-
-        if (!response.ok) {
-          const data = await response.json().catch(() => ({}))
-          throw new Error(data.message || 'Registration failed')
-        }
-
+        if (!isMountedRef.current) return
         setTab('login')
         setPassword('')
         alert('Registration successful! Please sign in.')
       }
     } catch (error) {
+      if (!isMountedRef.current) return
       setErrorMessage(error.message)
     } finally {
+      if (!isMountedRef.current) return
       setIsLoading(false)
     }
   }
@@ -80,7 +71,6 @@ function LoginPage() {
   return (
     <div className={styles.loginWrapper}>
 
-      {/* Pannello Sinistro */}
       <div className={`${styles.heroPanel} brand-sidebar-gradient d-none d-lg-flex flex-column justify-content-between`}>
         <div className="fs-3 fw-bold text-white d-flex align-items-center gap-2">
           <Logo size="32px" />
@@ -115,7 +105,6 @@ function LoginPage() {
         <div></div> 
       </div>
 
-      {/* Pannello Destro */}
       <div className={styles.formPanel}>
         <div className={`${styles.formInnerContainer} w-100`}>
 
@@ -167,14 +156,6 @@ function LoginPage() {
                       <input className={`${styles.customCheckbox} form-check-input`} type="checkbox" id="remember" />
                       <label className="form-check-label small text-white-50" htmlFor="remember">Remember me</label>
                     </div>
-                    
-                    {/*<button 
-                      type="button" 
-                      onClick={() => setShowResetModal(true)} 
-                      className={`${styles.brandPurpleText} btn btn-link p-0 small text-decoration-none fw-medium align-baseline border-0 bg-transparent`}
-                    >
-                      Forgot password?
-                    </button>*/}
                   </div>
                   
                   <button type="submit" className="btn btn-primary-custom w-100 rounded-3 py-1.5 fw-bold" disabled={isLoading}>
@@ -188,11 +169,11 @@ function LoginPage() {
                   <div className="row g-2 mb-2">
                     <div className="col-6">
                       <label className="form-label small fw-semibold text-light mb-1">First name</label>
-                      <input type="text" className="form-control custom-input rounded-3" placeholder="Anna" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
+                      <input type="text" className="form-control custom-input rounded-3" placeholder="Mario" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
                     </div>
                     <div className="col-6">
                       <label className="form-label small fw-semibold text-light mb-1">Last name</label>
-                      <input type="text" className="form-control custom-input rounded-3" placeholder="Moreau" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
+                      <input type="text" className="form-control custom-input rounded-3" placeholder="Rossi" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
                     </div>
                   </div>
                   <div className="mb-2">

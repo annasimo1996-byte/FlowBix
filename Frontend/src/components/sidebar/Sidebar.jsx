@@ -5,8 +5,8 @@ import Logo from '../brand/Logo'
 const MENU_ITEMS = [
   { path: '/', label: 'Home', icon: 'bi-grid-1x2-fill' },
   { path: '/clients', label: 'Clients', icon: 'bi-people-fill' },
-  { path: '/appuntamenti', label: 'Appointments', icon: 'bi-calendar-week-fill' },
-  { path: '/spese-ricavi', label: 'Finance', icon: 'bi-wallet2' },
+  { path: '/appointments', label: 'Appointments', icon: 'bi-calendar-week-fill' },
+  { path: '/finance', label: 'Finance', icon: 'bi-wallet2' },
 ]
 
 function Sidebar({ isOpen, onClose }) {

@@ -1,4 +1,4 @@
-function FinanzeView() {
+function FinanceView() {
   return (
     <div className="container-fluid pt-3">
       <h2>Spese e Ricavi</h2>
@@ -10,4 +10,4 @@ function FinanzeView() {
   )
 }
 
-export default FinanzeView
+export default FinanceView

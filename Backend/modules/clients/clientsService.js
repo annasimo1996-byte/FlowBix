@@ -1,4 +1,5 @@
 const Client = require('./clientsSchema');
+const mongoose = require('mongoose');
 const NotFoundException = require('../../exception/NotFoundException');
 const BadRequestException = require('../../exception/BadRequestException');
 
@@ -15,37 +16,44 @@ const getAllClients = async (userId, query = {}) => {
 };
 
 const createClient = async (clientData, userId) => {
-    //Controlla che l'email non appartenga ad un altro cliente dello stesso utente
-    if (clientData.email) {
-        const existingClient = await Client.findOne({ userId, email: clientData.email });
-        if (existingClient) {
+    try {
+        const client = new Client({ ...clientData, userId });
+        return await client.save();
+    } catch (err) {
+        if (err.code === 11000) {
             throw new BadRequestException('A customer with this email is already registered..');
         }
+        throw err;
     }
-
-    const client = new Client({ ...clientData, userId });
-    return await client.save();
 };
 
 const updateClient = async (clientId, updateData, userId) => {
+    if (!mongoose.Types.ObjectId.isValid(clientId)) {
+        throw new BadRequestException('Invalid client ID format.');
+    }
+
     const client = await Client.findOne({ _id: clientId, userId });
     if (!client) {
         throw new NotFoundException('Client not found or not authorized.');
     }
 
-    //Se modifica l'email controlla che non appartenga ad un altro cliente dello stesso utente
-    if (updateData.email && updateData.email !== client.email) {
-        const emailConflict = await Client.findOne({ userId, email: updateData.email });
-        if (emailConflict) {
+    Object.assign(client, updateData);
+
+    try {
+        return await client.save();
+    } catch (err) {
+        if (err.code === 11000) {
             throw new BadRequestException('The email address entered is already associated with another customer..');
         }
+        throw err;
     }
-
-    Object.assign(client, updateData);
-    return await client.save();
 };
 
 const deleteClient = async (clientId, userId) => {
+    if (!mongoose.Types.ObjectId.isValid(clientId)) {
+        throw new BadRequestException('Invalid client ID format.');
+    }
+
     const client = await Client.findOneAndDelete({ _id: clientId, userId });
     if (!client) {
         throw new NotFoundException('Client not found or not authorized.');

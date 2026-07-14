@@ -10,29 +10,42 @@ const ClientsView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [clientToEdit, setClientToEdit] = useState(null);
 
-  const loadClients = async () => {
-    try {
-      setLoading(true);
-      const data = await sendRequest("/clients", { method: "GET" });
-      const clientsList = Array.isArray(data) ? data : data.clients || [];
-      setClients(clientsList);
-      setError(null);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const controller = new AbortController();
+
+    const loadClients = async () => {
+      try {
+        setLoading(true);
+        const data = await sendRequest("/clients", { 
+          method: "GET",
+          signal: controller.signal 
+        });
+        const clientsList = Array.isArray(data) ? data : data.clients || [];
+        setClients(clientsList);
+        setError(null);
+      } catch (err) {
+        if (err.name === "AbortError") return; // Ignoriamo l'errore di unmount
+        setError(err.message);
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    };
+
     loadClients();
+
+    return () => {
+      controller.abort();
+    };
   }, []);
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this customer?")) return;
     try {
       await sendRequest(`/clients/${id}`, { method: "DELETE" });
-      setClients(clients.filter((client) => client._id !== id));
+      // Usiamo l'update funzionale per evitare closure stale sulla variabile clients
+      setClients((prevClients) => prevClients.filter((client) => client._id !== id));
     } catch (err) {
       alert(err.message);
     }
@@ -65,10 +78,7 @@ const ClientsView = () => {
           <h2>Anagrafica Clienti</h2>
           <p>Gestisci i dati e i contatti dei tuoi clienti.</p>
         </div>
-        <button
-          className="btn-primary-custom"
-          onClick={handleOpenNewModal}
-        >
+        <button className="btn-primary-custom" onClick={handleOpenNewModal}>
           Nuovo Cliente
         </button>
       </div>
@@ -78,7 +88,6 @@ const ClientsView = () => {
 
       {!loading && !error && (
         <>
-          {/* Tabella per desktop e tablet */}
           <div className="table-responsive-custom desktop-table-view">
             <table className="custom-table">
               <thead>
@@ -103,23 +112,13 @@ const ClientsView = () => {
                       <td title={client.email}>{client.email || "-"}</td>
                       <td title={client.phone}>{client.phone || "-"}</td>
                       <td title={client.company}>{client.company || "-"}</td>
-                      <td className="comment-cell" title={client.notes}>
-                        {client.notes || "-"}
-                      </td>
+                      <td className="comment-cell" title={client.notes}>{client.notes || "-"}</td>
                       <td>
                         <div className="action-icons-wrapper">
-                          <button
-                            className="btn-icon-custom btn-edit-icon"
-                            onClick={() => handleEdit(client)}
-                            title="Modifica"
-                          >
+                          <button className="btn-icon-custom btn-edit-icon" onClick={() => handleEdit(client)} title="Modifica">
                             <i className="bi bi-pencil-square" />
                           </button>
-                          <button
-                            className="btn-icon-custom btn-delete-icon"
-                            onClick={() => handleDelete(client._id)}
-                            title="Elimina"
-                          >
+                          <button className="btn-icon-custom btn-delete-icon" onClick={() => handleDelete(client._id)} title="Elimina">
                             <i className="bi bi-trash-fill" />
                           </button>
                         </div>
@@ -131,7 +130,6 @@ const ClientsView = () => {
             </table>
           </div>
 
-          {/* Schede per dispositivi mobili */}
           <div className="clients-cards-mobile">
             {clients.length === 0 ? (
               <p className="empty-text">Nessun cliente trovato.</p>
@@ -141,18 +139,10 @@ const ClientsView = () => {
                   <div className="client-card-header">
                     <h4 title={client.name}>{client.name}</h4>
                     <div className="action-icons-wrapper">
-                      <button
-                        className="btn-icon-custom btn-edit-icon"
-                        onClick={() => handleEdit(client)}
-                        title="Modifica"
-                      >
+                      <button className="btn-icon-custom btn-edit-icon" onClick={() => handleEdit(client)} title="Modifica">
                         <i className="bi bi-pencil-square" />
                       </button>
-                      <button
-                        className="btn-icon-custom btn-delete-icon"
-                        onClick={() => handleDelete(client._id)}
-                        title="Elimina"
-                      >
+                      <button className="btn-icon-custom btn-delete-icon" onClick={() => handleDelete(client._id)} title="Elimina">
                         <i className="bi bi-trash-fill" />
                       </button>
                     </div>

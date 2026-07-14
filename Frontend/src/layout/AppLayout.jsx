@@ -8,8 +8,8 @@ function AppLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen)
-  }
+    setIsSidebarOpen((prev) => !prev);
+  };
 
   const closeSidebar = () => {
     setIsSidebarOpen(false)
@@ -17,12 +17,12 @@ function AppLayout() {
 
   return (
     <div className="screenContainer">
-      
+
       {/* Stato e funzione di chiusura sidebar */}
       <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
 
       <div className="rightContentWrapper">
-        
+
         {/* Funzione di attivazione alla navbar */}
         <Navbar onToggleSidebar={toggleSidebar} />
 

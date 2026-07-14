@@ -32,4 +32,19 @@ const clientSchema = new mongoose.Schema({
   timestamps: true,
 });
 
+// Indice unico composto atomico per utente ed email (ignora stringhe vuote/null)
+clientSchema.index(
+  { userId: 1, email: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      email:
+      {
+        $type: "string",
+        $gt: ""
+      }
+    }
+  }
+);
+
 module.exports = mongoose.model('Client', clientSchema);

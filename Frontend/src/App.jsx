@@ -5,10 +5,37 @@ import { AuthContext } from './context/AuthContext'
 import LoginPage from './pages/LoginPage'
 import DashboardView from './pages/DashboardView'
 import ClientsView from './pages/ClientsView'
-import AppuntamentiView from './pages/AppuntamentiView'
-import SpeseRicaviView from './pages/FinanzeView'
+import AppointmentsView from './pages/AppointmentsView'
+import FinanceView from './pages/FinanceView'
 
 import AppLayout from './layout/AppLayout'
+
+// Sostituiamo il loader generico con una struttura identica al layout reale
+function AppShellSkeleton() {
+  return (
+    <div className="screenContainer">
+      <div className="rightContentWrapper">
+        <main className="pageDynamicArea" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#fff' }}>
+          <p>Caricamento in corso...</p>
+        </main>
+      </div>
+    </div>
+  )
+}
+
+function ProtectedShell() {
+  const { isLogged, isBootstrapped, authStatus } = useContext(AuthContext)
+
+  if (!isBootstrapped && !isLogged) {
+    return <AppShellSkeleton />
+  }
+
+  if (isLogged) {
+    return <AppLayout authStatus={authStatus} />
+  }
+
+  return <Navigate to="/login" replace />
+}
 
 function App() {
   const { isLogged } = useContext(AuthContext)
@@ -16,28 +43,22 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-
-        {/* ROTTA DI LOGIN*/}
+        {/* ROTTA DI LOGIN */}
         <Route
           path="/login"
-          element={isLogged ? <Navigate to="/" /> : <LoginPage />}
+          element={isLogged ? <Navigate to="/" replace /> : <LoginPage />}
         />
 
-        {/* CONTENITORE DELLE ROTTE PROTETTE: 
-           
-        */}
-        <Route
-          element={isLogged ? <AppLayout /> : <Navigate to="/login" />}
-        >
+        {/* CONTENITORE DELLE ROTTE PROTETTE */}
+        <Route element={<ProtectedShell />}>
           <Route path="/" element={<DashboardView />} />
           <Route path="/clients" element={<ClientsView />} />
-          <Route path="/appuntamenti" element={<AppuntamentiView />} />
-          <Route path="/spese-ricavi" element={<SpeseRicaviView />} />
+          <Route path="/appointments" element={<AppointmentsView />} />
+          <Route path="/finance" element={<FinanceView />} />
         </Route>
 
-        {/* Rotta di fallback*/}
-        <Route path="*" element={<Navigate to="/" />} />
-        
+        {/* Rotta di fallback con replace esplicito */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   )

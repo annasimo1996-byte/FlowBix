@@ -23,7 +23,7 @@
   align-items: center;
   gap: 1rem;
   flex: 1;
-  min-width: 0; /* Fondamentale per far funzionare il troncamento del testo flex */
+  min-width: 0; 
 }
 
 .appointment-time-badge {
@@ -74,7 +74,7 @@
   font-size: 0.85rem;
 }
 
-/* Badge di stato personalizzati */
+/* Badge di stato */
 .status-badge {
   padding: 0.2rem 0.5rem;
   border-radius: 0.25rem;
@@ -102,7 +102,7 @@
   border: 1px solid rgba(220, 53, 69, 0.3);
 }
 
-/* OTTIMIZZAZIONE RESPONSIVE MOBILE (< 576px) */
+/* MOBILE (< 576px) */
 @media (max-width: 576px) {
   .appointment-card {
     flex-direction: column;

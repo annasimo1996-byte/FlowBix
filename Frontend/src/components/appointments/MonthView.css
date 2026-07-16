@@ -89,16 +89,16 @@
   flex-shrink: 0;
 }
 
-/* OTTIMIZZAZIONE RESPONSIVE MOBILE STILE GOOGLE CALENDAR (< 768px) */
+/* MOBILE (< 768px) */
 @media (max-width: 768px) {
   .month-view-grid {
     gap: 0.2rem; 
   }
 
   .month-day-cell {
-    height: 58px; /* Cella quadrata e compatta stile app mobile */
+    height: 58px; 
     padding: 0.25rem;
-    align-items: center; /* Centriamo il numero per un look pulito */
+    align-items: center; 
   }
 
   .month-weekday-header {
@@ -111,7 +111,7 @@
     margin-bottom: 0.1rem;
   }
 
-  /* Su mobile trasformiamo i testi lunghi in comodi "pallini" o indicatori numerici puliti stile calendar */
+  /* Pallini su mobile */
   .month-day-indicators {
     flex-direction: row;
     justify-content: center;
@@ -123,7 +123,7 @@
   }
 
   .month-appointment-dot {
-    font-size: 0; /* Nasconde il testo testuale lungo */
+    font-size: 0; 
     width: 6px;
     height: 6px;
     padding: 0;

@@ -24,7 +24,7 @@ const AgendaToolbar = ({ currentView, onViewChange, selectedDate, onDateChange, 
         />
       </div>
 
-      {/* Selezione della vista per Desktop */}
+      {/* Vista per Desktop */}
       <div className="toolbar-view-group desktop-views">
         <button
           className={`btn-flowbix ${currentView === "day" ? "active" : "inactive"}`}
@@ -46,7 +46,7 @@ const AgendaToolbar = ({ currentView, onViewChange, selectedDate, onDateChange, 
         </button>
       </div>
 
-      {/* Selezione della vista tramite Select nativa (Visibile solo su Mobile) */}
+      {/* Select (Visibile solo su Mobile) */}
       <div className="toolbar-view-group mobile-select-view">
         <select
           className="form-control custom-input toolbar-select"

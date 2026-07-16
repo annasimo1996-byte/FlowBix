@@ -135,7 +135,7 @@
   font-weight: 500;
 }
 
-/* OTTIMIZZAZIONE RESPONSIVE MOBILE (< 576px) */
+/* MOBILE (< 576px) */
 @media (max-width: 576px) {
   .week-view-grid {
     grid-template-columns: 1fr;

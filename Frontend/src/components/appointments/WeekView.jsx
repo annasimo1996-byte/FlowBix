@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./WeekView.css";
 
 const WeekView = ({ appointments = [], selectedDate, onSelectDay }) => {
-  // Stato per tracciare quale appuntamento è attualmente espanso
+
   const [expandedId, setExpandedId] = useState(null);
 
   // Calcolo dei giorni della settimana del giorno selezionato

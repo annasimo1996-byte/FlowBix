@@ -15,7 +15,7 @@
   justify-content: space-between;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   padding-bottom: 0.75rem;
-  flex-wrap: wrap; /* Consente al titolo e al contatore di scivolare se lo schermo è molto stretto */
+  flex-wrap: wrap; 
   gap: 0.5rem;
 }
 
@@ -31,7 +31,7 @@
 
 .day-view-empty {
   text-align: center;
-  padding: 2.5rem 1rem; /* Ridotto leggermente il padding orizzontale per schermi piccoli */
+  padding: 2.5rem 1rem; 
   background-color: rgba(255, 255, 255, 0.015);
   border: 1px dashed rgba(255, 255, 255, 0.08);
   border-radius: 0.5rem;
@@ -43,7 +43,7 @@
   font-size: 0.95rem;
 }
 
-/* OTTIMIZZAZIONE RESPONSIVE MOBILE (< 576px) */
+/* MOBILE (< 576px) */
 @media (max-width: 576px) {
   .day-view-date-title {
     font-size: 1rem;

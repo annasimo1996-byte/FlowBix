@@ -83,7 +83,7 @@
   color: #ffffff;
 }
 
-/* OTTIMIZZAZIONE RESPONSIVE MOBILE (< 768px) */
+/* MOBILE (< 768px) */
 @media (max-width: 768px) {
   .agenda-toolbar {
     flex-direction: column;
@@ -91,7 +91,7 @@
     gap: 0.75rem;
   }
 
-  /* Nascondiamo i bottoni Back / Today / Next su smartphone */
+  /* Niente Back / Today / Next su smartphone */
   .mobile-hidden {
     display: none !important;
   }
@@ -100,13 +100,12 @@
     width: 100%;
   }
 
-  /* L'input data occupa l'intera larghezza in modo pulito */
   .agenda-toolbar .toolbar-date-input {
     width: 100% !important;
     text-align: center;
   }
 
-  /* Nascondiamo i bottoni delle viste desktop e mostriamo la tendina */
+  /* Bottoni -> Tendina*/
   .desktop-views {
     display: none !important;
   }
@@ -119,6 +118,6 @@
   .agenda-toolbar .toolbar-select {
     width: 100% !important;
     text-align: center;
-    text-align-last: center; /* Centra il testo della select nei browser supportati */
+    text-align-last: center; 
   }
 }

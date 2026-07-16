@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { sendRequest } from "../../utils/api";
-import "./NewClientModal.css";
+import "./Modal.css";
 
 const NewClientModal = ({ isOpen, onClose, clientToEdit, onClientSaved }) => {
     const [formData, setFormData] = useState({
@@ -13,10 +13,9 @@ const NewClientModal = ({ isOpen, onClose, clientToEdit, onClientSaved }) => {
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState(null);
     
-    // Riferimento per gestire l'AbortController ed evitare race condition/stale state
     const abortControllerRef = useRef(null);
 
-    // Cleanup alla chiusura o smontaggio del componente
+    // Pulizia o smontaggio del componente
     useEffect(() => {
         return () => {
             if (abortControllerRef.current) {
@@ -78,7 +77,7 @@ const NewClientModal = ({ isOpen, onClose, clientToEdit, onClientSaved }) => {
             setFormData({ name: "", email: "", phone: "", company: "", notes: "" });
             onClose();
         } catch (err) {
-            if (err.name === "AbortError") return; // Ignora se la chiamata è stata abortita
+            if (err.name === "AbortError") return; 
             setError(err.message);
         } finally {
             setSubmitting(false);
@@ -88,12 +87,12 @@ const NewClientModal = ({ isOpen, onClose, clientToEdit, onClientSaved }) => {
     return (
         <div className="modal-backdrop-custom">
             <div className="modal-content-custom">
-                <h3>{clientToEdit ? "Modifica Cliente" : "Nuovo Cliente"}</h3>
+                <h3>{clientToEdit ? "Edit Customer" : "New Customer"}</h3>
                 {error && <p className="error-text-custom">{error}</p>}
 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group-custom">
-                        <label>Nome</label>
+                        <label>Name</label>
                         <input
                             type="text"
                             name="name"
@@ -112,7 +111,7 @@ const NewClientModal = ({ isOpen, onClose, clientToEdit, onClientSaved }) => {
                         />
                     </div>
                     <div className="form-group-custom">
-                        <label>Telefono</label>
+                        <label>Phone</label>
                         <input
                             type="text"
                             name="phone"
@@ -121,7 +120,7 @@ const NewClientModal = ({ isOpen, onClose, clientToEdit, onClientSaved }) => {
                         />
                     </div>
                     <div className="form-group-custom">
-                        <label>Azienda</label>
+                        <label>Company</label>
                         <input
                             type="text"
                             name="company"
@@ -148,14 +147,14 @@ const NewClientModal = ({ isOpen, onClose, clientToEdit, onClientSaved }) => {
                             onClick={onClose}
                             disabled={submitting}
                         >
-                            Annulla
+                            Cancel
                         </button>
                         <button
                             type="submit"
                             className="btn-submit-custom"
                             disabled={submitting}
                         >
-                            {submitting ? "Salvataggio..." : "Salva Cliente"}
+                            {submitting ? "Saving..." : "Save Customer"}
                         </button>
                     </div>
                 </form>

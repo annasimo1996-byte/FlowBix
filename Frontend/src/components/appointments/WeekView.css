@@ -2,11 +2,12 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  width: 100%;
 }
 
 .week-view-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1rem;
 }
 
@@ -71,6 +72,7 @@
   padding: 0.5rem 0.75rem;
   font-size: 0.85rem;
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .mini-appointment-card:hover {
@@ -78,11 +80,22 @@
   border-color: rgba(124, 107, 255, 0.3);
 }
 
+.mini-appointment-card.expanded {
+  background-color: rgba(124, 107, 255, 0.05);
+  border-color: rgba(124, 107, 255, 0.5);
+}
+
+.mini-card-header-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .mini-appointment-time {
   color: var(--brand-purple);
   font-weight: 600;
   font-size: 0.75rem;
-  margin-bottom: 0.1rem;
+  flex-shrink: 0;
 }
 
 .mini-appointment-client {
@@ -91,4 +104,46 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  flex: 1;
+}
+
+.mini-card-details-expanded {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.mini-service-text {
+  color: #a0aec0;
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+.mini-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.2rem;
+}
+
+.mini-price {
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* OTTIMIZZAZIONE RESPONSIVE MOBILE (< 576px) */
+@media (max-width: 576px) {
+  .week-view-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .week-day-column {
+    min-height: auto;
+    padding: 0.75rem;
+  }
 }

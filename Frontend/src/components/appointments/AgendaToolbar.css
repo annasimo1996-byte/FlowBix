@@ -14,6 +14,16 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Gestione visibilità selettori vista */
+.mobile-select-view {
+  display: none;
+}
+
+.desktop-views {
+  display: flex;
 }
 
 /* Bottoni */
@@ -47,8 +57,9 @@
   color: #ffffff !important;
 }
 
-/* Input data */
-.agenda-toolbar .toolbar-date-input {
+/* Input data e Select */
+.agenda-toolbar .toolbar-date-input,
+.agenda-toolbar .toolbar-select {
   width: auto !important;
   height: 38px !important;
   padding: 0.375rem 0.75rem !important;
@@ -60,8 +71,54 @@
   color-scheme: dark; 
 }
 
-.agenda-toolbar .toolbar-date-input:focus {
+.agenda-toolbar .toolbar-date-input:focus,
+.agenda-toolbar .toolbar-select:focus {
   border-color: var(--brand-purple) !important;
   box-shadow: 0 0 0 0.2rem rgba(124, 107, 255, 0.25) !important;
   outline: none;
+}
+
+.agenda-toolbar .toolbar-select option {
+  background-color: #1a1a2e;
+  color: #ffffff;
+}
+
+/* OTTIMIZZAZIONE RESPONSIVE MOBILE (< 768px) */
+@media (max-width: 768px) {
+  .agenda-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  /* Nascondiamo i bottoni Back / Today / Next su smartphone */
+  .mobile-hidden {
+    display: none !important;
+  }
+
+  .toolbar-nav-group {
+    width: 100%;
+  }
+
+  /* L'input data occupa l'intera larghezza in modo pulito */
+  .agenda-toolbar .toolbar-date-input {
+    width: 100% !important;
+    text-align: center;
+  }
+
+  /* Nascondiamo i bottoni delle viste desktop e mostriamo la tendina */
+  .desktop-views {
+    display: none !important;
+  }
+
+  .mobile-select-view {
+    display: flex !important;
+    width: 100%;
+  }
+
+  .agenda-toolbar .toolbar-select {
+    width: 100% !important;
+    text-align: center;
+    text-align-last: center; /* Centra il testo della select nei browser supportati */
+  }
 }

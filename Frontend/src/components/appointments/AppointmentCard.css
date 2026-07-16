@@ -2,12 +2,15 @@
   background-color: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 0.5rem;
-  padding: 1rem 1.25rem;
+  padding: 1rem;
   margin-bottom: 0.75rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
   transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .appointment-card:hover {
@@ -18,52 +21,67 @@
 .appointment-main-info {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
+  flex: 1;
+  min-width: 0; /* Fondamentale per far funzionare il troncamento del testo flex */
 }
 
 .appointment-time-badge {
   background-color: rgba(124, 107, 255, 0.12);
   color: var(--brand-purple);
-  padding: 0.4rem 0.75rem;
+  padding: 0.4rem 0.6rem;
   border-radius: 0.35rem;
   font-weight: 600;
-  font-size: 0.9rem;
-  min-width: 80px;
+  font-size: 0.85rem;
+  flex-shrink: 0;
   text-align: center;
 }
 
+.appointment-details {
+  min-width: 0;
+  flex: 1;
+}
+
 .appointment-details h5 {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: #ffffff;
-  margin: 0 0 0.2rem 0;
+  margin: 0 0 0.15rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .appointment-details p {
   color: #a0aec0;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .appointment-meta {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
+  flex-shrink: 0;
 }
 
 .appointment-price {
   color: #ffffff;
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 /* Badge di stato personalizzati */
 .status-badge {
-  padding: 0.25rem 0.6rem;
+  padding: 0.2rem 0.5rem;
   border-radius: 0.25rem;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 500;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .status-badge.scheduled {
@@ -82,4 +100,24 @@
   background-color: rgba(220, 53, 69, 0.15);
   color: #dc3545;
   border: 1px solid rgba(220, 53, 69, 0.3);
+}
+
+/* OTTIMIZZAZIONE RESPONSIVE MOBILE (< 576px) */
+@media (max-width: 576px) {
+  .appointment-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding: 0.85rem;
+  }
+
+  .appointment-main-info {
+    width: 100%;
+  }
+
+  .appointment-meta {
+    justify-content: space-between;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 0.5rem;
+  }
 }

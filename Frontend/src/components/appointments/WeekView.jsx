@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import "./WeekView.css";
 
 const WeekView = ({ appointments = [], selectedDate, onSelectDay }) => {
+  // Stato per tracciare quale appuntamento è attualmente espanso
+  const [expandedId, setExpandedId] = useState(null);
+
   // Calcolo dei giorni della settimana del giorno selezionato
   const getDaysOfWeek = (dateString) => {
     const curr = new Date(dateString);
@@ -29,6 +32,10 @@ const WeekView = ({ appointments = [], selectedDate, onSelectDay }) => {
     });
   };
 
+  const toggleExpand = (appId) => {
+    setExpandedId(prevId => (prevId === appId ? null : appId));
+  };
+
   return (
     <div className="week-view-container">
       <div className="week-view-grid">
@@ -51,14 +58,40 @@ const WeekView = ({ appointments = [], selectedDate, onSelectDay }) => {
                 {dayAppointments.length === 0 ? (
                   <div className="week-empty-slot">No obligation</div>
                 ) : (
-                  dayAppointments.map((app) => (
-                    <div key={app._id || app.id} className="mini-appointment-card">
-                      <div className="mini-appointment-time">{app.time || "09:00"}</div>
-                      <div className="mini-appointment-client">
-                        {app.clientId?.name || app.clientName || "Client"}
+                  dayAppointments.map((app) => {
+                    const appId = app._id || app.id;
+                    const isExpanded = expandedId === appId;
+                    const clientName = app.clientId?.name || app.clientName || "Client";
+                    const serviceName = app.service || "General service";
+                    const priceString = app.price ? `€ ${app.price}` : "";
+                    const status = app.status || "scheduled";
+
+                    return (
+                      <div 
+                        key={appId} 
+                        className={`mini-appointment-card ${isExpanded ? "expanded" : ""}`}
+                        onClick={() => toggleExpand(appId)}
+                        title="Click to toggle details"
+                      >
+                        <div className="mini-card-header-row">
+                          <div className="mini-appointment-time">{app.time || "09:00"}</div>
+                          <div className="mini-appointment-client">{clientName}</div>
+                        </div>
+
+                        {isExpanded && (
+                          <div className="mini-card-details-expanded">
+                            <p className="mini-service-text">{serviceName}</p>
+                            <div className="mini-card-footer">
+                              {priceString && <span className="mini-price">{priceString}</span>}
+                              <span className={`status-badge ${status}`}>
+                                {status}
+                              </span>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  ))
+                    );
+                  })
                 )}
               </div>
             </div>

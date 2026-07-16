@@ -1,6 +1,7 @@
 const {
   fetchAppointments,
   addAppointment,
+  updateAppointmentService,
   changeAppointmentStatus,
   removeAppointment,
 } = require("./appointmentsService.js");
@@ -16,11 +17,17 @@ const getAppointments = async (req, res, next) => {
 
 const createAppointment = async (req, res, next) => {
   try {
-    const { clientId, date, service, price, status } = req.body;
+    let { clientId, date, time, service, price, status } = req.body;
 
-    if (!clientId || !date || !service || price === undefined) {
+    if (!clientId || !date || !time || !service || price === undefined) {
       res.status(400);
       throw new Error("All mandatory fields must be filled in.");
+    }
+
+    // Conversione della data se arriva come stringa DD/MM/YYYY dal frontend
+    if (typeof date === 'string' && date.includes('/')) {
+      const [day, month, year] = date.split('/');
+      date = new Date(`${year}-${month}-${day}`);
     }
 
     const validStatuses = ["scheduled", "completed", "canceled"];
@@ -30,6 +37,7 @@ const createAppointment = async (req, res, next) => {
       userId: req.user._id,
       clientId,
       date,
+      time, 
       service,
       price,
       status: appointmentStatus,
@@ -41,18 +49,26 @@ const createAppointment = async (req, res, next) => {
   }
 };
 
-const updateAppointmentStatus = async (req, res, next) => {
+const updateAppointment = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    
+    const updateData = {};
+    const allowedFields = ["clientId", "date", "time", "service", "price", "status"];
+    
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        updateData[field] = req.body[field];
+      }
+    });
 
-    //selezione dello stato
-    if (!["scheduled", "completed", "canceled"].includes(status)) {
-      res.status(400);
-      throw new Error("Invalid status specified (allowed values: scheduled, completed, cancelled).");
+    if (updateData.date && typeof updateData.date === 'string' && updateData.date.includes('/')) {
+      const [day, month, year] = updateData.date.split('/');
+      updateData.date = new Date(`${year}-${month}-${day}`);
     }
 
-    const updated = await changeAppointmentStatus(id, req.user._id, status);
+    const updated = await updateAppointmentService(id, req.user._id, updateData);
+
     if (!updated) {
       res.status(404);
       throw new Error("Appointment not found.");
@@ -60,6 +76,7 @@ const updateAppointmentStatus = async (req, res, next) => {
 
     res.status(200).json(updated);
   } catch (err) {
+    console.error("ERRORE DETTAGLIATO UPDATE:", err);
     next(err);
   }
 };
@@ -81,6 +98,6 @@ const deleteAppointment = async (req, res, next) => {
 module.exports = {
   getAppointments,
   createAppointment,
-  updateAppointmentStatus,
+  updateAppointment,
   deleteAppointment,
 };

@@ -10,11 +10,19 @@ const MonthView = ({ appointments = [], selectedDate, onSelectDay }) => {
   const firstDayOfMonth = new Date(year, month, 1);
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   
-  // Giorno della settimana del primo giorno (0 = Domenica, 1 = Lunedì...)
+  // Giorno della settimana del primo giorno del mese
   let startDayOfWeek = firstDayOfMonth.getDay();
   startDayOfWeek = startDayOfWeek === 0 ? 6 : startDayOfWeek - 1; 
 
-  const todayStr = new Date().toISOString().split("T")[0];
+  // Formatta la data in formato YYYY-MM-DD 
+  const formatLocalDate = (dateObj) => {
+    const y = dateObj.getFullYear();
+    const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const d = String(dateObj.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  };
+
+  const todayStr = formatLocalDate(new Date());
 
   // I giorni del mese precedente di riempimento
   const prevMonthDays = new Date(year, month, 0).getDate();
@@ -41,7 +49,7 @@ const MonthView = ({ appointments = [], selectedDate, onSelectDay }) => {
       isCurrentMonth = false;
     }
 
-    const dateStr = cellDateObj.toISOString().split("T")[0];
+    const dateStr = formatLocalDate(cellDateObj);
     daysGrid.push({ dateStr, dayNum, cellDateObj, isCurrentMonth });
   }
 

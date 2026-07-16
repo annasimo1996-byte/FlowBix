@@ -2,7 +2,7 @@ import React from "react";
 import AppointmentCard from "./AppointmentCard";
 import "./DayView.css";
 
-const DayView = ({ appointments = [], selectedDate, onStatusChange }) => {
+const DayView = ({ appointments = [], selectedDate, onStatusChange, onEdit, onDelete }) => {
   const formatDateHeader = (dateString) => {
     if (!dateString) return "";
     const options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
@@ -28,6 +28,8 @@ const DayView = ({ appointments = [], selectedDate, onStatusChange }) => {
             key={appointment._id || appointment.id}
             appointment={appointment}
             onStatusChange={onStatusChange}
+            onEdit={onEdit}
+            onDelete={onDelete}
           />
         ))
       )}

@@ -14,16 +14,18 @@ const AppointmentsView = () => {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Stato per gestire l'appuntamento da modificare
+  const [appointmentToEdit, setAppointmentToEdit] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
     const fetchData = async () => {
       setLoading(true);
       try {
-        
         const [appData, clientData] = await Promise.all([
           sendRequest("/appointments"),
-          sendRequest("/clients").catch(() => []), // Fallback se la rotta clienti ha un nome diverso o fallisce
+          sendRequest("/clients").catch(() => []), 
         ]);
         if (isMounted) {
           setAppointments(appData || []);
@@ -56,14 +58,36 @@ const AppointmentsView = () => {
 
   const handleStatusChange = async (appointmentId, newStatus) => {
     try {
-      await sendRequest(`/appointments/${appointmentId}`, {
-        method: "PATCH",
+      const updatedApp = await sendRequest(`/appointments/${appointmentId}`, {
+        method: "PUT", 
         body: JSON.stringify({ status: newStatus }),
       });
-      console.log(`Update appointment ${appointmentId} to ${newStatus}`);
+      // Sincronizzazione in tempo reale dello stato locale
+      setAppointments((prev) =>
+        prev.map((app) => (app._id === appointmentId ? updatedApp : app))
+      );
     } catch (err) {
       console.error("Error updating status:", err);
     }
+  };
+
+  // Eliminazione appuntamento 
+  const handleDeleteAppointment = async (appointmentId) => {
+    if (!window.confirm("Are you sure you want to delete this appointment?")) return;
+    try {
+      await sendRequest(`/appointments/${appointmentId}`, {
+        method: "DELETE",
+      });
+      setAppointments((prev) => prev.filter((app) => app._id !== appointmentId));
+    } catch (err) {
+      console.error("Error deleting appointment:", err);
+    }
+  };
+
+  // Modale di modifica
+  const handleEditClick = (appointment) => {
+    setAppointmentToEdit(appointment);
+    setIsModalOpen(true);
   };
 
   const handleNavigate = (direction) => {
@@ -88,8 +112,15 @@ const AppointmentsView = () => {
     setSelectedDate(dateObj.toISOString().split("T")[0]);
   };
 
-  const handleSaveAppointment = (newApp) => {
-    setAppointments((prev) => [...prev, newApp]);
+  // Sincronizzazione salvataggio Creazione / Modifica 
+  const handleSaveAppointment = (savedAppointment, isEditing) => {
+    setAppointments((prev) => {
+      if (isEditing) {
+        return prev.map((app) => (app._id === savedAppointment._id ? savedAppointment : app));
+      } else {
+        return [...prev, savedAppointment];
+      }
+    });
   };
 
   return (
@@ -99,7 +130,13 @@ const AppointmentsView = () => {
           <h2>Appointment Schedule</h2>
           <p>Manage and monitor all your services and commitments in real time.</p>
         </div>
-        <button className="btn-flowbix active" onClick={() => setIsModalOpen(true)}>
+        <button 
+          className="btn-flowbix active" 
+          onClick={() => { 
+            setAppointmentToEdit(null);
+            setIsModalOpen(true); 
+          }}
+        >
           + New Appointment
         </button>
       </div>
@@ -127,6 +164,8 @@ const AppointmentsView = () => {
                 appointments={getFilteredAppointmentsForDay()}
                 selectedDate={selectedDate}
                 onStatusChange={handleStatusChange}
+                onEdit={handleEditClick}
+                onDelete={handleDeleteAppointment}
               />
             )}
             {currentView === "week" && (
@@ -155,10 +194,14 @@ const AppointmentsView = () => {
 
       <AppointmentModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => { 
+          setIsModalOpen(false); 
+          setAppointmentToEdit(null); 
+        }}
         onSave={handleSaveAppointment}
         selectedDate={selectedDate}
         clients={clients}
+        appointmentToEdit={appointmentToEdit}
       />
     </div>
   );

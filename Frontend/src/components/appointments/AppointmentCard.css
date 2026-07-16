@@ -102,6 +102,51 @@
   border: 1px solid rgba(220, 53, 69, 0.3);
 }
 
+/* Selettore di stato*/
+.appointment-status-wrapper {
+  display: inline-flex;
+  align-items: center;
+}
+
+.status-badge-select {
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.status-badge-select.scheduled {
+  background-color: rgba(255, 193, 7, 0.15);
+  color: #ffc107;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.status-badge-select.completed {
+  background-color: rgba(40, 167, 69, 0.15);
+  color: #28a745;
+  border: 1px solid rgba(40, 167, 69, 0.3);
+}
+
+.status-badge-select.canceled {
+  background-color: rgba(220, 53, 69, 0.15);
+  color: #dc3545;
+  border: 1px solid rgba(220, 53, 69, 0.3);
+}
+
+.status-badge-select option {
+  background-color: #1a1a2e;
+  color: #ffffff;
+}
+
 /* MOBILE (< 576px) */
 @media (max-width: 576px) {
   .appointment-card {

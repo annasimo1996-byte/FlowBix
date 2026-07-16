@@ -2,30 +2,38 @@ import React, { useState } from "react";
 import "./WeekView.css";
 
 const WeekView = ({ appointments = [], selectedDate, onSelectDay }) => {
-
   const [expandedId, setExpandedId] = useState(null);
 
-  // Calcolo dei giorni della settimana del giorno selezionato
+  // Formatta la data in formato YYYY-MM-DD 
+  const formatLocalDate = (dateObj) => {
+    const y = dateObj.getFullYear();
+    const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const d = String(dateObj.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  };
+
+  // Giorni della settimana del giorno selezionato
   const getDaysOfWeek = (dateString) => {
-    const curr = new Date(dateString);
+    const [year, month, dayNum] = dateString.split("-").map(Number);
+    const curr = new Date(year, month - 1, dayNum);
     const day = curr.getDay();
     // Imposta a Lunedì 
     const diff = curr.getDate() - day + (day === 0 ? -6 : 1);
     
     const weekDays = [];
     for (let i = 0; i < 7; i++) {
-      const nextDay = new Date(curr.setDate(diff + i));
-      weekDays.push(new Date(nextDay));
+      const nextDay = new Date(year, month - 1, diff + i);
+      weekDays.push(nextDay);
     }
     return weekDays;
   };
 
   const weekDays = getDaysOfWeek(selectedDate);
-  const todayStr = new Date().toISOString().split("T")[0];
+  const todayStr = formatLocalDate(new Date());
 
-  // Filtrare gli appuntamenti di uno specifico giorno
+  // Appuntamenti di uno specifico giorno
   const getAppointmentsForDay = (dateObj) => {
-    const dateStr = dateObj.toISOString().split("T")[0];
+    const dateStr = formatLocalDate(dateObj);
     return appointments.filter((app) => {
       const appDate = app.date ? app.date.split("T")[0] : "";
       return appDate === dateStr;
@@ -40,7 +48,7 @@ const WeekView = ({ appointments = [], selectedDate, onSelectDay }) => {
     <div className="week-view-container">
       <div className="week-view-grid">
         {weekDays.map((dayObj, index) => {
-          const dateStr = dayObj.toISOString().split("T")[0];
+          const dateStr = formatLocalDate(dayObj);
           const isToday = dateStr === todayStr;
           const dayAppointments = getAppointmentsForDay(dayObj);
 
@@ -49,7 +57,13 @@ const WeekView = ({ appointments = [], selectedDate, onSelectDay }) => {
 
           return (
             <div key={index} className={`week-day-column ${isToday ? "today" : ""}`}>
-              <div className="week-day-header">
+           
+              <div 
+                className="week-day-header" 
+                onClick={() => onSelectDay(dateStr)}
+                style={{ cursor: "pointer" }}
+                title="Click to view this day"
+              >
                 <span className="week-day-name">{dayName}</span>
                 <span className="week-day-date">{dayDate}</span>
               </div>
@@ -70,7 +84,10 @@ const WeekView = ({ appointments = [], selectedDate, onSelectDay }) => {
                       <div 
                         key={appId} 
                         className={`mini-appointment-card ${isExpanded ? "expanded" : ""}`}
-                        onClick={() => toggleExpand(appId)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleExpand(appId);
+                        }}
                         title="Click to toggle details"
                       >
                         <div className="mini-card-header-row">

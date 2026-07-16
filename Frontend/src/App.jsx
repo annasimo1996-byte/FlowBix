@@ -10,13 +10,12 @@ import FinanceView from './pages/FinanceView'
 
 import AppLayout from './layout/AppLayout'
 
-// Sostituiamo il loader generico con una struttura identica al layout reale
 function AppShellSkeleton() {
   return (
     <div className="screenContainer">
       <div className="rightContentWrapper">
         <main className="pageDynamicArea" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#fff' }}>
-          <p>Caricamento in corso...</p>
+          <p>Loading...</p>
         </main>
       </div>
     </div>
@@ -57,7 +56,7 @@ function App() {
           <Route path="/finance" element={<FinanceView />} />
         </Route>
 
-        {/* Rotta di fallback con replace esplicito */}
+        {/* Rotta di fallback  */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

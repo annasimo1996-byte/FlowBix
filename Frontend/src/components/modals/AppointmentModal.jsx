@@ -4,7 +4,6 @@ import "./Modal.css";
 
 const initialFormState = {
   clientId: "",
-  clientName: "",
   date: "",
   time: "09:00",
   service: "",
@@ -12,21 +11,41 @@ const initialFormState = {
   status: "scheduled",
 };
 
-const AppointmentModal = ({ isOpen, onClose, onSave, selectedDate, clients = [] }) => {
+const AppointmentModal = ({ isOpen, onClose, onSave, selectedDate, clients = [], appointmentToEdit = null }) => {
   const [formData, setFormData] = useState(initialFormState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Sincronizza o resetta il modale con la data
   useEffect(() => {
     if (isOpen) {
-      setFormData({
-        ...initialFormState,
-        date: selectedDate || new Date().toISOString().split("T")[0],
-      });
+      if (appointmentToEdit) {
+        // Modalità Modifica
+        setFormData({
+          clientId: appointmentToEdit.clientId?._id || appointmentToEdit.clientId || "",
+          date: appointmentToEdit.date ? appointmentToEdit.date.split("T")[0] : "",
+          time: appointmentToEdit.time || "09:00",
+          service: appointmentToEdit.service || "",
+          price: appointmentToEdit.price || "",
+          status: appointmentToEdit.status || "scheduled",
+        });
+      } else {
+        // Modalità Creazione
+        let formattedDate = "";
+        if (selectedDate) {
+          const d = new Date(selectedDate);
+          formattedDate = !isNaN(d.getTime()) ? d.toISOString().split("T")[0] : selectedDate;
+        } else {
+          formattedDate = new Date().toISOString().split("T")[0];
+        }
+
+        setFormData({
+          ...initialFormState,
+          date: formattedDate,
+        });
+      }
       setError(null);
     }
-  }, [isOpen, selectedDate]);
+  }, [isOpen, selectedDate, appointmentToEdit]);
 
   if (!isOpen) return null;
 
@@ -41,12 +60,22 @@ const AppointmentModal = ({ isOpen, onClose, onSave, selectedDate, clients = [] 
     setError(null);
 
     try {
-      const responseData = await sendRequest("/appointments", {
-        method: "POST",
-        body: JSON.stringify(formData),
-      });
-      onSave(responseData);
-      onClose(); 
+      let responseData;
+      if (appointmentToEdit) {
+        // PUT per aggiornare
+        responseData = await sendRequest(`/appointments/${appointmentToEdit._id}`, {
+          method: "PUT",
+          body: JSON.stringify(formData),
+        });
+      } else {
+        // POST per creare
+        responseData = await sendRequest("/appointments", {
+          method: "POST",
+          body: JSON.stringify(formData),
+        });
+      }
+      onSave(responseData, !!appointmentToEdit);
+      onClose();
     } catch (err) {
       setError(err.data?.message || "Error saving the appointment.");
     } finally {
@@ -57,7 +86,7 @@ const AppointmentModal = ({ isOpen, onClose, onSave, selectedDate, clients = [] 
   return (
     <div className="modal-backdrop-custom">
       <div className="modal-content-custom">
-        <h3>Nuovo Appuntamento</h3>
+        <h3>{appointmentToEdit ? "Modifica Appuntamento" : "Nuovo Appuntamento"}</h3>
 
         <form onSubmit={handleSubmit}>
           {error && <div className="error-text-custom">{error}</div>}
@@ -73,7 +102,7 @@ const AppointmentModal = ({ isOpen, onClose, onSave, selectedDate, clients = [] 
               <option value="">Select a customer</option>
               {clients.map((client) => (
                 <option key={client._id || client.id} value={client._id || client.id}>
-                  {client.name}
+                  {client.name} {client.surname || ""}
                 </option>
               ))}
             </select>

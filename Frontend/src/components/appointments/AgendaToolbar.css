@@ -1,0 +1,67 @@
+.agenda-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.toolbar-nav-group,
+.toolbar-view-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Bottoni */
+.agenda-toolbar .btn-flowbix {
+  padding: 0.375rem 0.75rem !important;
+  font-size: 0.9rem !important;
+  box-shadow: none !important;
+  height: 38px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.agenda-toolbar .btn-flowbix:hover {
+  transform: none !important;
+}
+
+.agenda-toolbar .btn-flowbix.active {
+  background-color: var(--brand-purple) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4), 0 4px 14px rgba(124, 107, 255, 0.4) !important;
+}
+
+.agenda-toolbar .btn-flowbix.inactive {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  color: #a0aec0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.agenda-toolbar .btn-flowbix.inactive:hover {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  color: #ffffff !important;
+}
+
+/* Input data */
+.agenda-toolbar .toolbar-date-input {
+  width: auto !important;
+  height: 38px !important;
+  padding: 0.375rem 0.75rem !important;
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 0.375rem;
+  font-size: 0.9rem !important;
+  color-scheme: dark; 
+}
+
+.agenda-toolbar .toolbar-date-input:focus {
+  border-color: var(--brand-purple) !important;
+  box-shadow: 0 0 0 0.2rem rgba(124, 107, 255, 0.25) !important;
+  outline: none;
+}

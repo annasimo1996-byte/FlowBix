@@ -24,7 +24,7 @@ const ClientsView = () => {
         setClients(clientsList);
         setError(null);
       } catch (err) {
-        if (err.name === "AbortError") return; // Ignoriamo l'errore di unmount
+        if (err.name === "AbortError") return;
         setError(err.message);
       } finally {
         if (!controller.signal.aborted) {
@@ -44,7 +44,6 @@ const ClientsView = () => {
     if (!window.confirm("Are you sure you want to delete this customer?")) return;
     try {
       await sendRequest(`/clients/${id}`, { method: "DELETE" });
-      // Usiamo l'update funzionale per evitare closure stale sulla variabile clients
       setClients((prevClients) => prevClients.filter((client) => client._id !== id));
     } catch (err) {
       alert(err.message);
@@ -75,15 +74,15 @@ const ClientsView = () => {
     <div className="clients-container">
       <div className="section-header">
         <div className="section-header-titles">
-          <h2>Anagrafica Clienti</h2>
-          <p>Gestisci i dati e i contatti dei tuoi clienti.</p>
+          <h2>Customer Master Data</h2>
+          <p>Manage your customer data and contacts.</p>
         </div>
         <button className="btn-primary-custom" onClick={handleOpenNewModal}>
-          Nuovo Cliente
+          New Client
         </button>
       </div>
 
-      {loading && <p className="loading-text">Caricamento in corso...</p>}
+      {loading && <p className="loading-text">Loading...</p>}
       {error && <p className="error-text">{error}</p>}
 
       {!loading && !error && (
@@ -92,18 +91,18 @@ const ClientsView = () => {
             <table className="custom-table">
               <thead>
                 <tr>
-                  <th>Nome</th>
+                  <th>Name</th>
                   <th>Email</th>
-                  <th>Telefono</th>
-                  <th>Azienda</th>
-                  <th>Note</th>
-                  <th>Azioni</th>
+                  <th>Phone</th>
+                  <th>Compay</th>
+                  <th>Notes</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {clients.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="empty-text">Nessun cliente trovato.</td>
+                    <td colSpan="6" className="empty-text">No client found.</td>
                   </tr>
                 ) : (
                   clients.map((client) => (
@@ -132,7 +131,7 @@ const ClientsView = () => {
 
           <div className="clients-cards-mobile">
             {clients.length === 0 ? (
-              <p className="empty-text">Nessun cliente trovato.</p>
+              <p className="empty-text">No client found.</p>
             ) : (
               clients.map((client) => (
                 <div key={client._id} className="client-card-item">
@@ -149,9 +148,9 @@ const ClientsView = () => {
                   </div>
                   <div className="client-card-body">
                     <p><span>Email:</span> <span className="card-val" title={client.email}>{client.email || "-"}</span></p>
-                    <p><span>Telefono:</span> <span className="card-val" title={client.phone}>{client.phone || "-"}</span></p>
-                    <p><span>Azienda:</span> <span className="card-val" title={client.company}>{client.company || "-"}</span></p>
-                    <p><span>Note:</span> <span className="card-val" title={client.notes}>{client.notes || "-"}</span></p>
+                    <p><span>Phone:</span> <span className="card-val" title={client.phone}>{client.phone || "-"}</span></p>
+                    <p><span>Company:</span> <span className="card-val" title={client.company}>{client.company || "-"}</span></p>
+                    <p><span>Notes:</span> <span className="card-val" title={client.notes}>{client.notes || "-"}</span></p>
                   </div>
                 </div>
               ))

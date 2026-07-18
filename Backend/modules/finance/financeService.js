@@ -3,7 +3,7 @@ const Finance = require('./financeSchema.js');
 const getMovements = async (userId, filters = {}) => {
     const query = { userId };
 
-    // Filtro per tipo (income/expense)
+    // Filtro per tipo
     if (filters.type) {
         query.type = filters.type;
     }
@@ -27,7 +27,7 @@ const updateMovement = async (movementId, userId, updateData) => {
     return await Finance.findOneAndUpdate(
         { _id: movementId, userId },
         updateData,
-        { returnDocument: 'after', runValidators: true }
+        { new: true, runValidators: true }
     );
 };
 

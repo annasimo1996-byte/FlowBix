@@ -23,7 +23,8 @@ const FinanceView = () => {
         ]);
 
         if (isMounted) {
-          setExpenses(Array.isArray(expRes) ? expRes : []);
+          // Estrazione dell'array "data"
+          setExpenses(expRes && Array.isArray(expRes.data) ? expRes.data : []);
           setAppointments(Array.isArray(appRes) ? appRes : []);
         }
       } catch (err) {

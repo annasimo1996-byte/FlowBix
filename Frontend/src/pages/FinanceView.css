@@ -68,6 +68,7 @@
 
 .expense-amount {
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .finance-table th:last-child,

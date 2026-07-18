@@ -1,81 +1,81 @@
 const financeService = require('./financeService.js');
 const NotFoundException = require('../../exception/NotFoundException.js');
 
-const getExpenses = async (req, res, next) => {
+const getMovements = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        const expenses = await financeService.getExpensesByUserId(userId);
+        // Filtri opzionali dalla query string
+        const { type, startDate, endDate } = req.query;
+        
+        const movements = await financeService.getMovements(userId, { type, startDate, endDate });
+        
         res.status(200).json({ 
             success: true, 
-            data: expenses 
+            data: movements 
         });
     } catch (error) {
         next(error);
     }
 };
 
-const addExpense = async (req, res, next) => {
+const addMovement = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        const { 
-            category, 
-            amount, 
-            date, 
-            description 
-        } = req.body;
+        const { category, amount, date, description, type } = req.body;
 
-        const newExpense = await financeService.createExpense({
+        const newMovement = await financeService.createMovement({
             userId,
             category,
             amount,
             date: date || Date.now(),
-            description
+            description,
+            type: type || 'expense' 
         });
 
         res.status(201).json({ 
             success: true, 
-            data: newExpense 
+            data: newMovement 
         });
     } catch (error) {
         next(error);
     }
 };
 
-const editExpense = async (req, res, next) => {
+const editMovement = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        const expenseId = req.params.id;
+        const movementId = req.params.id;
         const updateData = req.body;
 
-        const updatedExpense = await financeService.updateExpense(expenseId, userId, updateData);
+        const updatedMovement = await financeService.updateMovement(movementId, userId, updateData);
         
-        if (!updatedExpense) {
-            throw new NotFoundException('Expense not found or unauthorized');
+        if (!updatedMovement) {
+            throw new NotFoundException('Movement not found or unauthorized');
         }
 
         res.status(200).json({ 
             success: true, 
-            data: updatedExpense 
+            data: updatedMovement 
         });
     } catch (error) {
         next(error);
     }
 };
 
-const removeExpense = async (req, res, next) => {
+const removeMovement = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        const expenseId = req.params.id;
+        const movementId = req.params.id;
 
-        const deletedExpense = await financeService.deleteExpense(expenseId, userId);
+        const deletedMovement = await financeService.deleteMovement(movementId, userId);
         
-        if (!deletedExpense) {
-            throw new NotFoundException('Expense not found or unauthorized');
+        if (!deletedMovement) {
+            throw new NotFoundException('Movement not found or unauthorized');
         }
 
         res.status(200).json({ 
             success: true, 
-            message: 'Expense deleted successfully' 
+            message: 'Movement deleted successfully' 
         });
     } catch (error) {
         next(error);
@@ -83,8 +83,8 @@ const removeExpense = async (req, res, next) => {
 };
 
 module.exports = {
-    getExpenses,
-    addExpense,
-    editExpense,
-    removeExpense
+    getMovements,
+    addMovement,
+    editMovement,
+    removeMovement
 };

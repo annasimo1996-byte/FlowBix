@@ -14,8 +14,7 @@ const AppointmentsView = () => {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  // Stato per gestire l'appuntamento da modificare
+
   const [appointmentToEdit, setAppointmentToEdit] = useState(null);
 
   useEffect(() => {
@@ -27,6 +26,7 @@ const AppointmentsView = () => {
           sendRequest("/appointments"),
           sendRequest("/clients").catch(() => []), 
         ]);
+        
         if (isMounted) {
           setAppointments(appData || []);
           setClients(clientData || []);
@@ -62,7 +62,7 @@ const AppointmentsView = () => {
         method: "PUT", 
         body: JSON.stringify({ status: newStatus }),
       });
-      // Sincronizzazione in tempo reale dello stato locale
+      // Sincronizzazione dello stato locale
       setAppointments((prev) =>
         prev.map((app) => (app._id === appointmentId ? updatedApp : app))
       );

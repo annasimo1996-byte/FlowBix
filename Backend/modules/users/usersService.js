@@ -38,7 +38,7 @@ const updateUser = async (id, updateData) => {
   const updatedUser = await User.findByIdAndUpdate(
     id,
     updateData,
-    { new: true, runValidators: true }
+    { returnDocument: 'after', runValidators: true }
   ).select("-password");
 
   if (!updatedUser) {

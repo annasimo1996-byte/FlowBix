@@ -25,7 +25,13 @@ const financeSchema = new mongoose.Schema({
         type: String,
         trim: true,
         maxlength: 500
-    }
+    },
+    type: {
+        type: String,
+        enum: ['income', 'expense'], 
+        required: true,
+        default: 'expense'
+    },
 }, {
     timestamps: true
 });

@@ -2,17 +2,17 @@ const express = require("express");
 const financeRouter = express.Router();
 const { protect } = require("../../middlewares/authMiddleware.js");
 const {
-    getExpenses,
-    addExpense,
-    editExpense,
-    removeExpense,
+    getMovements,
+    addMovement,
+    editMovement,
+    removeMovement
 } = require("./financeControllers.js");
 
 financeRouter.use(protect);
 
-financeRouter.get("/", getExpenses);
-financeRouter.post("/", addExpense);
-financeRouter.put("/:id", editExpense);
-financeRouter.delete("/:id", removeExpense);
+financeRouter.get("/", getMovements);
+financeRouter.post("/", addMovement);
+financeRouter.put("/:id", editMovement);
+financeRouter.delete("/:id", removeMovement);
 
 module.exports = financeRouter;

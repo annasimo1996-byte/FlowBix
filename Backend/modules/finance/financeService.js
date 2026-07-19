@@ -27,7 +27,7 @@ const updateMovement = async (movementId, userId, updateData) => {
     return await Finance.findOneAndUpdate(
         { _id: movementId, userId },
         updateData,
-        { new: true, runValidators: true }
+        { returnDocument: 'after', runValidators: true }
     );
 };
 

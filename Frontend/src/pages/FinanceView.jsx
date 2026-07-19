@@ -12,31 +12,50 @@ const FinanceView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [expenseToEdit, setExpenseToEdit] = useState(null);
 
-  // Stati per il filtro Mese/Anno
+  // Stati per il filtro temporale
+  const [filterMode, setFilterMode] = useState('monthly'); // 'monthly', 'range', 'custom'
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
+  const [rangeType, setRangeType] = useState('3'); // 3, 6, 12 mesi
+  const [customStartDate, setCustomStartDate] = useState('');
+  const [customEndDate, setCustomEndDate] = useState('');
 
   useEffect(() => {
     let isMounted = true;
+
+    // Funzione calcolo periodi 
+    const getDates = () => {
+      const today = new Date();
+      if (filterMode === 'monthly') {
+        return { start: new Date(year, month - 1, 1), end: new Date(year, month, 0, 23, 59, 59) };
+      }
+      if (filterMode === 'range') {
+        const months = parseInt(rangeType);
+        return { start: new Date(today.getFullYear(), today.getMonth() - months + 1, 1), end: new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59) };
+      }
+      return {
+        start: customStartDate ? new Date(customStartDate) : new Date(today.setMonth(today.getMonth() - 1)),
+        end: customEndDate ? new Date(new Date(customEndDate).setHours(23, 59, 59)) : new Date()
+      };
+    };
+
+    const { start, end } = getDates();
+
     const fetchData = async () => {
       setLoading(true);
-      // Calcolo date per il backend
-      const startDate = new Date(year, month - 1, 1);
-      const endDate = new Date(year, month, 0, 23, 59, 59);
-
       try {
         const [expRes, appRes] = await Promise.all([
-          sendRequest(`/finance?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`),
+          sendRequest(`/finance?startDate=${start.toISOString()}&endDate=${end.toISOString()}`),
           sendRequest("/appointments")
         ]);
 
         if (isMounted) {
           setExpenses(expRes && Array.isArray(expRes.data) ? expRes.data : []);
 
-          // Filtraggio appuntamenti
+          // Filtraggio appuntamenti 
           const filteredApps = Array.isArray(appRes) ? appRes.filter(app => {
             const d = new Date(app.date);
-            return d.getMonth() + 1 === parseInt(month) && d.getFullYear() === parseInt(year);
+            return d >= start && d <= end;
           }) : [];
           setAppointments(filteredApps);
         }
@@ -48,7 +67,9 @@ const FinanceView = () => {
     };
     fetchData();
     return () => { isMounted = false; };
-  }, [month, year]);
+
+    
+  }, [filterMode, month, year, rangeType, customStartDate, customEndDate]);
 
   const combinedData = [
     ...expenses.map(exp => ({
@@ -98,12 +119,65 @@ const FinanceView = () => {
       <div className="section-header">
         <div className="header-controls">
           <div className="filters-group">
-            <select className="custom-select" value={month} onChange={(e) => setMonth(e.target.value)}>
-              {[...Array(12).keys()].map(m => <option key={m + 1} value={m + 1}>{new Date(0, m).toLocaleString('default', { month: 'long' })}</option>)}
+            {/*Select per la modalità di filtro */}
+            <select
+              className="custom-select main-filter-select"
+              value={filterMode}
+              onChange={(e) => setFilterMode(e.target.value)}
+            >
+              <option value="monthly">Monthly</option>
+              <option value="range">Default Period</option>
+              <option value="custom">Custom Dates</option>
             </select>
-            <select className="custom-select" value={year} onChange={(e) => setYear(e.target.value)}>
-              {[new Date().getFullYear(), new Date().getFullYear() - 1].map(y => <option key={y} value={y}>{y}</option>)}
-            </select>
+
+            {/*Modalità 1 -> Mese e Anno */}
+            {filterMode === 'monthly' && (
+              <div className="monthly-inputs-group">
+                <select className="custom-select" value={month} onChange={(e) => setMonth(e.target.value)}>
+                  {[...Array(12).keys()].map(m => (
+                    <option key={m + 1} value={m + 1}>
+                      {new Date(0, m).toLocaleString('default', { month: 'long' })}
+                    </option>
+                  ))}
+                </select>
+                <select className="custom-select" value={year} onChange={(e) => setYear(e.target.value)}>
+                  {[new Date().getFullYear(), new Date().getFullYear() - 1].map(y => (
+                    <option key={y} value={y}>{y}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {/*Modalità 2 -> Trimestre/Semestre/Anno*/}
+            {filterMode === 'range' && (
+              <select
+                className="custom-select sub-filter-select"
+                value={rangeType}
+                onChange={(e) => setRangeType(e.target.value)}
+              >
+                <option value="3">Last 3 Months</option>
+                <option value="6">Last 6 Months</option>
+                <option value="12">Final Year (12 Months)</option>
+              </select>
+            )}
+
+            {/* Modalità 3 -> tipo Data*/}
+            {filterMode === 'custom' && (
+              <div className="custom-date-inputs">
+                <input
+                  type="date"
+                  className="custom-select"
+                  value={customStartDate}
+                  onChange={(e) => setCustomStartDate(e.target.value)}
+                />
+                <input
+                  type="date"
+                  className="custom-select"
+                  value={customEndDate}
+                  onChange={(e) => setCustomEndDate(e.target.value)}
+                />
+              </div>
+            )}
           </div>
 
           <button className="btn-flowbix" onClick={() => { setExpenseToEdit(null); setIsModalOpen(true); }}>

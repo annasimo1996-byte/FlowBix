@@ -12,20 +12,33 @@ const FinanceView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [expenseToEdit, setExpenseToEdit] = useState(null);
 
+  // Stati per il filtro Mese/Anno
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [year, setYear] = useState(new Date().getFullYear());
+
   useEffect(() => {
     let isMounted = true;
     const fetchData = async () => {
       setLoading(true);
+      // Calcolo date per il backend
+      const startDate = new Date(year, month - 1, 1);
+      const endDate = new Date(year, month, 0, 23, 59, 59);
+
       try {
         const [expRes, appRes] = await Promise.all([
-          sendRequest("/finance"),
+          sendRequest(`/finance?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`),
           sendRequest("/appointments")
         ]);
 
         if (isMounted) {
-          // Estrazione dell'array "data"
           setExpenses(expRes && Array.isArray(expRes.data) ? expRes.data : []);
-          setAppointments(Array.isArray(appRes) ? appRes : []);
+
+          // Filtraggio appuntamenti
+          const filteredApps = Array.isArray(appRes) ? appRes.filter(app => {
+            const d = new Date(app.date);
+            return d.getMonth() + 1 === parseInt(month) && d.getFullYear() === parseInt(year);
+          }) : [];
+          setAppointments(filteredApps);
         }
       } catch (err) {
         if (isMounted) setError(err.message || "Failed to load data");
@@ -35,9 +48,8 @@ const FinanceView = () => {
     };
     fetchData();
     return () => { isMounted = false; };
-  }, []);
+  }, [month, year]);
 
-  // Array unificato
   const combinedData = [
     ...expenses.map(exp => ({
       id: exp._id,
@@ -61,7 +73,6 @@ const FinanceView = () => {
       }))
   ].sort((a, b) => b.date - a.date);
 
-  // Calcolo statistiche basato sull'array unificato
   const stats = combinedData.reduce((acc, curr) => {
     if (curr.type === 'income') acc.income += curr.amount;
     else acc.expense += curr.amount;
@@ -85,14 +96,21 @@ const FinanceView = () => {
   return (
     <div className="finance-container container-fluid">
       <div className="section-header">
-        <div className="section-header-titles">
-          <h2 className="d-none d-md-block">Finance Management</h2>
-          <p className="d-none d-md-block">Monitor your expenses, categories, and financial flow in real time.</p>
+        <div className="header-controls">
+          <div className="filters-group">
+            <select className="custom-select" value={month} onChange={(e) => setMonth(e.target.value)}>
+              {[...Array(12).keys()].map(m => <option key={m + 1} value={m + 1}>{new Date(0, m).toLocaleString('default', { month: 'long' })}</option>)}
+            </select>
+            <select className="custom-select" value={year} onChange={(e) => setYear(e.target.value)}>
+              {[new Date().getFullYear(), new Date().getFullYear() - 1].map(y => <option key={y} value={y}>{y}</option>)}
+            </select>
+          </div>
+
+          <button className="btn-flowbix" onClick={() => { setExpenseToEdit(null); setIsModalOpen(true); }}>
+            <span className="btn-icon">+</span>
+            <span className="btn-text-responsive"> New Expense</span>
+          </button>
         </div>
-        <button className="btn-flowbix" onClick={() => { setExpenseToEdit(null); setIsModalOpen(true); }}>
-          <span className="d-none d-md-inline">+ New Expense</span>
-          <span className="d-inline d-md-none">+</span>
-        </button>
       </div>
 
       <div className="finance-dashboard-wrapper">
@@ -127,8 +145,12 @@ const FinanceView = () => {
                       <td className="text-end">
                         {!item.isAppointment && (
                           <div className="action-buttons-group">
-                            <button className="btn-action-edit" onClick={() => { setExpenseToEdit(expenses.find(e => e._id === item.id)); setIsModalOpen(true); }}>Edit</button>
-                            <button className="btn-action-delete" onClick={() => handleDeleteExpense(item.id)}>Delete</button>
+                            <button className="btn-icon-custom btn-edit-icon" title="Edit" onClick={() => { setExpenseToEdit(expenses.find(e => e._id === item.id)); setIsModalOpen(true); }}>
+                              <i className="bi bi-pencil-square" />
+                            </button>
+                            <button className="btn-icon-custom btn-delete-icon" title="Delete" onClick={() => handleDeleteExpense(item.id)}>
+                              <i className="bi bi-trash-fill" />
+                            </button>
                           </div>
                         )}
                       </td>

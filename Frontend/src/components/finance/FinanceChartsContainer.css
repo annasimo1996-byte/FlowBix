@@ -1,0 +1,93 @@
+/*Mobile (< 768px)*/
+.finance-charts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+/* Contenitore card della singola chart */
+.chart-card {
+  background-color: var(--bg-card, #1e1e2d);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.chart-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary, #ffffff);
+  margin-bottom: 0.75rem;
+}
+
+/* Container del disegno*/
+.chart-container {
+  width: 100%;
+  height: 220px; 
+  position: relative;
+}
+
+/* Vuoto quando non ci sono dati */
+.chart-empty-state {
+  background-color: var(--bg-card, #1e1e2d);
+  border: 1px dashed var(--border-color, rgba(255, 255, 255, 0.15));
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-secondary, #a0aec0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+/* Tooltip personalizzato */
+.custom-chart-tooltip {
+  background-color: #1a202c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.tooltip-label {
+  color: #e2e8f0;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.tooltip-item {
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* TABLET (>= 768px)*/
+@media (min-width: 768px) {
+  .finance-charts-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .chart-container {
+    height: 250px; 
+  }
+}
+
+/* DESKTOP (>= 992px)*/
+@media (min-width: 992px) {
+  .finance-charts-grid {
+    grid-template-columns: 1.5fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .chart-container {
+    height: 290px; 
+  }
+}

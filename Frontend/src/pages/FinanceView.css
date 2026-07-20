@@ -157,6 +157,79 @@
   font-size: 1rem;
 }
 
+/*I grafici*/
+.charts-grid-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.chart-card {
+  background-color: #1a1a30;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.chart-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 1rem 0;
+}
+
+/* Container di disegno*/
+.chart-container {
+  width: 100%;
+  height: 220px;
+  position: relative;
+}
+
+.chart-empty-state {
+  background-color: #1a1a30;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  color: #a0aec0;
+  font-size: 0.9rem;
+}
+
+/* Custom Tooltip Grafici */
+.custom-chart-tooltip {
+  background-color: #0e1118;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.custom-chart-tooltip .tooltip-label {
+  color: #a0aec0;
+  font-size: 0.8rem;
+  margin: 0 0 0.3rem 0;
+}
+
+.custom-chart-tooltip .tooltip-item {
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* Personalizzazione font legenda */
+.recharts-default-legend-script {
+  font-size: 0.75rem !important;
+}
+
+.recharts-legend-item-text {
+  color: #a0aec0 !important;
+  font-size: 0.8rem !important;
+}
 
 /* Schermi Desktop/Tablet*/
 @media (min-width: 577px) {
@@ -247,5 +320,35 @@
   .expense-category-badge {
     font-size: 0.9rem;
     color: #fff;
+  }
+}
+ /*Grafici*/
+@media (min-width: 768px) {
+  .charts-grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 1.25rem;
+  }
+
+  .chart-container {
+    height: 250px; 
+  }
+}
+
+/* Desktop standard (>= 1024px) */
+@media (min-width: 1024px) {
+  .charts-grid-container {
+    grid-template-columns: 1.4fr 1fr;
+  }
+
+  .chart-container {
+    height: 280px;
+  }
+}
+
+/* Desktop Large (>= 1440px) */
+@media (min-width: 1440px) {
+  .chart-container {
+    height: 300px;
   }
 }

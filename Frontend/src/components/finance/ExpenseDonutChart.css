@@ -1,0 +1,71 @@
+/* Card principale */
+.chart-card {
+  background-color: var(--bg-card, #1e1e2d);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* Titolo del grafico */
+.chart-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary, #ffffff);
+  margin: 0 0 0.75rem 0;
+}
+
+/* Container responsive */
+.chart-container {
+  width: 100%;
+  height: 220px; 
+  position: relative;
+}
+
+/* State vuoto */
+.chart-empty-state {
+  background-color: var(--bg-card, #1e1e2d);
+  border: 1px dashed var(--border-color, rgba(255, 255, 255, 0.15));
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-secondary, #a0aec0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+/* Tooltip Personalizzato */
+.custom-chart-tooltip {
+  background-color: #1a202c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.custom-chart-tooltip .tooltip-item {
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* Customizzazioni per la legenda di Recharts */
+.recharts-legend-item-text {
+  color: #a0aec0 !important;
+}
+
+@media (min-width: 768px) {
+  .chart-container {
+    height: 250px;
+  }
+}
+
+@media (min-width: 992px) {
+  .chart-container {
+    height: 290px;
+  }
+}

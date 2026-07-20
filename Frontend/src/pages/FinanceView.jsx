@@ -3,6 +3,9 @@ import { sendRequest } from "../utils/api";
 import "./FinanceView.css";
 import FinanceModal from "../components/modals/FinanceModal";
 import FinanceDashboard from "../components/finance/FinanceDashboard";
+import { getTrendChartData, getCategoryChartData } from "../utils/financeHelpers";
+import FinanceChartsContainer from "../components/finance/FinanceChartsContainer";
+import BalanceTrendChart from "../components/finance/BalanceTrendChart"
 
 const FinanceView = () => {
   const [expenses, setExpenses] = useState([]);
@@ -68,7 +71,6 @@ const FinanceView = () => {
     fetchData();
     return () => { isMounted = false; };
 
-    
   }, [filterMode, month, year, rangeType, customStartDate, customEndDate]);
 
   const combinedData = [
@@ -101,6 +103,8 @@ const FinanceView = () => {
   }, { income: 0, expense: 0 });
 
   const netBalance = stats.income - stats.expense;
+  const trendChartData = getTrendChartData(combinedData, filterMode);
+  const categoryChartData = getCategoryChartData(combinedData, 'expense');
 
   const handleDeleteExpense = async (expenseId) => {
     if (!window.confirm("Are you sure?")) return;
@@ -190,6 +194,12 @@ const FinanceView = () => {
       <div className="finance-dashboard-wrapper">
         <FinanceDashboard stats={{ ...stats, net: netBalance }} />
       </div>
+
+      {/* Contenitore Grafici Recharts */}
+      <FinanceChartsContainer
+        trendData={trendChartData}
+        categoryData={categoryChartData}
+      />
 
       <div className="finance-content">
         {loading ? <p>Loading...</p> : error ? <p>{error}</p> : combinedData.length === 0 ? <p>No transactions found.</p> : (

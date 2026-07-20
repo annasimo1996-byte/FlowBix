@@ -1,0 +1,65 @@
+span{
+    color:antiquewhite
+}
+
+.dashboard-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr; 
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Su tablet e desktop: 3 colonne */
+@media (min-width: 768px) {
+  .dashboard-stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.stat-card {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  padding: 1.2rem; 
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+}
+
+.stat-card h3 {
+  margin: 0.5rem 0 0 0;
+  font-size: 1.25rem; 
+}
+
+@media (min-width: 768px) {
+  .stat-card h3 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .dashboard-stats-grid {
+    grid-template-columns: 1fr 1fr; 
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+
+  /* Netto nascosto su mobile */
+  .dashboard-stats-grid .stat-card:nth-child(3) {
+    display: none;
+  }
+
+  .stat-card {
+    padding: 0.7rem;
+    align-items: center;
+  }
+
+  .stat-card span {
+    font-size: 0.65rem;
+    margin-bottom: 2px;
+  }
+
+  .stat-card h3 {
+    font-size: 0.9rem;
+  }
+}

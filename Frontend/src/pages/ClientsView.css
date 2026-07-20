@@ -5,17 +5,10 @@
   font-family: inherit;
   margin-bottom: 2.5rem;
 }
-
-.clients-header {
+.section-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2.5rem;
-}
-
-.clients-header h2 {
-  font-size: 1.8rem;
-  color: #333;
+  justify-content: flex-end; 
+  margin-bottom: 1.5rem;     
 }
 
 .btn-primary-custom {
@@ -31,21 +24,6 @@
 
 .btn-primary-custom:hover {
   background-color: #1d4ed8;
-}
-
-.btn-danger-custom {
-  background-color: #dc2626;
-  color: white;
-  border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: background-color 0.2s;
-}
-
-.btn-danger-custom:hover {
-  background-color: #b91c1c;
 }
 
 .table-responsive-custom {

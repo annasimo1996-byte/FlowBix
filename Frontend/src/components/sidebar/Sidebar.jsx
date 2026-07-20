@@ -60,7 +60,7 @@ function Sidebar({ isOpen, onClose }) {
 
         {/* FOOTER */}
         <div className="sidebarFooter">
-          <i className="bi bi-shield-check me-1" /> Secure Session
+          <span>© 2026 Anna Maria Simonetti</span>
         </div>
 
       </aside>

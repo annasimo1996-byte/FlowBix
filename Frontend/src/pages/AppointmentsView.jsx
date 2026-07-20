@@ -126,10 +126,6 @@ const AppointmentsView = () => {
   return (
     <div className="appointments-container container-fluid">
       <div className="section-header">
-        <div className="section-header-titles">
-          <h2>Appointment Schedule</h2>
-          <p>Manage and monitor all your services and commitments in real time.</p>
-        </div>
         <button 
           className="btn-flowbix active" 
           onClick={() => { 

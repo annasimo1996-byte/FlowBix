@@ -73,12 +73,8 @@ const ClientsView = () => {
   return (
     <div className="clients-container">
       <div className="section-header">
-        <div className="section-header-titles">
-          <h2>Customer Master Data</h2>
-          <p>Manage your customer data and contacts.</p>
-        </div>
         <button className="btn-primary-custom" onClick={handleOpenNewModal}>
-          New Client
+          + New Client
         </button>
       </div>
 

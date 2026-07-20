@@ -2,7 +2,7 @@ import { useState, useContext, useEffect, useRef } from 'react'
 import { Tab, Nav } from 'react-bootstrap'
 import { AuthContext } from '../context/AuthContext'
 import { sendRequest } from '../utils/api'
-import styles from './LoginPage.module.css' 
+import styles from "./LoginPage.module.css"; 
 import Logo from '../components/brand/Logo'
 
 import SocialButtons from '../components/common/SocialButtons'

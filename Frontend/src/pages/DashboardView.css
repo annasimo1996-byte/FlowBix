@@ -1,0 +1,97 @@
+.dashboard-container {
+  width: 100%;
+  padding: 1rem;
+}
+
+/* Griglia Mobile-First */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+/* Card */
+.stats-card {
+  background-color: var(--bg-dark-left);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.stats-card:hover {
+  border-color: rgba(124, 107, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Header interno della card*/
+.stats-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.stats-card-title {
+  color: #b0b0c0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Badge per l'icona */
+.stats-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 8px;
+  background-color: rgba(124, 107, 255, 0.12);
+  color: var(--brand-purple);
+  font-size: 1.1rem;
+}
+
+.stats-card-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+/* Colori dinamici per il netto */
+.stats-card-value.positive {
+  color: #2ed573;
+}
+
+.stats-card-value.negative {
+  color: #ff4757;
+}
+
+/* Messaggio di errore */
+.dashboard-error {
+  color: #ff4757;
+  background-color: rgba(255, 71, 87, 0.1);
+  border: 1px solid rgba(255, 71, 87, 0.2);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+/* Tablet e Desktop */
+@media (min-width: 768px) {
+  .dashboard-container {
+    padding: 1.5rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+}

@@ -3,7 +3,7 @@ import { sendRequest } from "../utils/api";
 import { BsPeopleFill, BsCalendarEventFill, BsWallet2 } from "react-icons/bs";
 import "./DashboardView.css";
 
-function DashboardView() {
+const DashboardView= () => {
   const [stats, setStats] = useState({
     totalClients: 0,
     todayAppointments: 0,

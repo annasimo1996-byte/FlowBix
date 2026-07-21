@@ -14,7 +14,11 @@ const FLOW_STEPS = [
   { icon: 'bi-wallet2', label: 'Finance', color: '#34a853' },
 ]
 
-function LoginPage() {
+const isValidEmail = (email) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+};
+
+const LoginPage = () => {
   const [tab, setTab] = useState('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -37,7 +41,13 @@ function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setErrorMessage('')
-    setIsLoading(true)
+  
+    if (!isValidEmail(email)) {
+      setErrorMessage('Please enter a valid email address (e.g. name@domain.com)');
+      return; // Interrompe l'invio
+    }
+    
+    setIsLoading(true);
 
     try {
       if (tab === 'login') {

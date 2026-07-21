@@ -15,6 +15,11 @@ const register = async (req, res, next) => {
       throw new BadRequestException("All fields (firstName, lastName, email, password) are required");
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      throw new BadRequestException("Please provide a valid email address");
+    }
+
     const existingUser = await userService.findUserByEmail(email);
     if (existingUser) {
       throw new BadRequestException("This email's already registered");

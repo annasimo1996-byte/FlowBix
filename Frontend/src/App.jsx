@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthContext } from './context/AuthContext'
 
 import LoginPage from './pages/LoginPage'
+import ProfileView from "./pages/ProfileView"
 import DashboardView from './pages/DashboardView'
 import ClientsView from './pages/ClientsView'
 import AppointmentsView from './pages/AppointmentsView'
@@ -50,6 +51,7 @@ function App() {
 
         {/* CONTENITORE DELLE ROTTE PROTETTE */}
         <Route element={<ProtectedShell />}>
+          <Route path="/profile" element={<ProfileView />} />
           <Route path="/" element={<DashboardView />} />
           <Route path="/clients" element={<ClientsView />} />
           <Route path="/appointments" element={<AppointmentsView />} />

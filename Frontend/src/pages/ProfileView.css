@@ -1,0 +1,182 @@
+.profilePageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem 1rem;
+  width: 100%;
+}
+
+.profileCard {
+  background-color: var(--bg-card, #1e1e2d);
+  border: 1px solid var(--border-color, #2b2b40);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 580px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.profileCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.profileAvatarWrapper {
+  flex-shrink: 0;
+}
+
+.profileAvatarImg {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent-color, #7000ff);
+}
+
+.profileAvatarInitials {
+   width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7000ff 0%, #8b3dff 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(112, 0, 255, 0.3);
+}
+
+.profileTitleSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.profileName {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary, #ffffff);
+  margin: 0;
+}
+
+/* Provider Badges */
+.providerBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.825rem;
+  font-weight: 500;
+  width: fit-content;
+}
+
+.googleBadge {
+  background-color: rgba(234, 67, 53, 0.12);
+  color: #ea4335;
+  border: 1px solid rgba(234, 67, 53, 0.3);
+}
+
+.githubBadge {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #f0f6fc;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.emailBadge {
+  background-color: rgba(112, 0, 255, 0.12);
+  color: #a855f7;
+  border: 1px solid rgba(112, 0, 255, 0.3);
+}
+
+.profileDivider {
+  border: none;
+  border-top: 1px solid var(--border-color, #2b2b40);
+  margin: 1.75rem 0;
+}
+
+/* Dettagli */
+.profileDetailsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.profileDetailItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.profileDetailItem.fullWidth {
+  grid-column: span 2;
+}
+
+.detailLabel {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary, #8c8c9e);
+  font-weight: 500;
+}
+
+.detailValue {
+  font-size: .9rem;
+  color: var(--text-primary, #ffffff);
+  font-weight: 500;
+  word-break: break-all;
+}
+
+/* Bottone Logout */
+.profileActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.profileLogoutBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background-color: rgba(255, 77, 77, 0.1);
+  color: #ff4d4d;
+  border: 1px solid rgba(255, 77, 77, 0.3);
+  padding: 0.65rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.profileLogoutBtn:hover {
+  background-color: #ff4d4d;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(255, 77, 77, 0.3);
+}
+
+.profileLoadingState {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary, #8c8c9e);
+}
+
+@media (max-width: 576px) {
+  .profileDetailsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .profileDetailItem.fullWidth {
+    grid-column: span 1;
+  }
+
+  .profileCardHeader {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .profileTitleSection {
+    align-items: center;
+  }
+}

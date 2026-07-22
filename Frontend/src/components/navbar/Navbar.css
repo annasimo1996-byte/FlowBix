@@ -258,6 +258,11 @@
   color: #ff6666;
 }
 
+.customDropdownMenu a.dropdownItem,
+.dropdownItem {
+  text-decoration: none;
+}
+
 @keyframes fadeInDropdown {
   from {
     opacity: 0;

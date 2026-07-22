@@ -2,6 +2,7 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const GitHubStrategy = require("passport-github2").Strategy;
 const User = require("../modules/users/usersSchema.js");
+const BACKEND_URL = process.env.BACKEND_URL || "https://flowbix-backend.onrender.com";
 
 console.log("--> GOOGLE CLIENT ID CARICATO:", process.env.GOOGLE_CLIENT_ID),
 
@@ -11,7 +12,7 @@ console.log("--> GOOGLE CLIENT ID CARICATO:", process.env.GOOGLE_CLIENT_ID),
     {
       clientID: process.env.GOOGLE_CLIENT_ID || "temp_id",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "temp_secret",
-      callbackURL: "/auth/google/callback",
+      callbackURL: `${BACKEND_URL}/auth/google/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -53,7 +54,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID || "temp_id",
       clientSecret: process.env.GITHUB_CLIENT_SECRET || "temp_secret",
-      callbackURL: "/auth/github/callback",
+      callbackURL: `${BACKEND_URL}/auth/google/callback`,
       scope: ["user:email"], 
     },
     async (accessToken, refreshToken, profile, done) => {

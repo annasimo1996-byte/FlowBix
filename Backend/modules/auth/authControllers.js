@@ -118,8 +118,9 @@ const oauthCallback = (req, res, next) => {
       { expiresIn: "24h" }
     );
 
-    // Reindirizzamento al frontend passando il token nella query string
-    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const frontendUrl = process.env.CLIENT_URL || process.env.CLIENT_URL;
+    
+    // Reindirizzamento al frontend con token nella query string
     res.redirect(`${frontendUrl}/login?token=${token}`);
   } catch (error) {
     next(error);

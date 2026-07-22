@@ -1,5 +1,6 @@
-require("dotenv/config");
+require("dotenv").config();
 const express = require("express");
+const passport = require("passport");
 const cors = require("cors");
 const startDb = require("./config/db.js");
 
@@ -18,6 +19,7 @@ const allowedOrigins = [
   process.env.CLIENT_URL,
 ];
 
+require("dotenv").config();
 server.use(express.json());
 server.use(
   cors({
@@ -25,6 +27,8 @@ server.use(
     credentials: true,
   })
 );
+
+server.use(passport.initialize());
 
 server.use("/users", usersRoute);
 server.use("/dashboard", dashboardRoute);

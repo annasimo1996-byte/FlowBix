@@ -38,13 +38,50 @@ const LoginPage = () => {
     }
   }, [])
 
+  // Intercetta il token restituito da Google/Social OAuth
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tokenFromUrl = params.get('token');
+
+    if (tokenFromUrl) {
+      const handleOAuthLogin = async () => {
+        setIsLoading(true);
+        try {
+          // Recupera i dati dell'utente usando il token ricevuto
+          const userData = await sendRequest('/users/me', {
+            method: 'GET',
+            headers: { Authorization: `Bearer ${tokenFromUrl}` },
+          });
+
+          if (isMountedRef.current) {
+            // Salva token e user nello stato globale/localStorage
+            login(tokenFromUrl, userData);
+            
+            // Pulisce il parametro ?token dall'URL 
+            window.history.replaceState({}, document.title, window.location.pathname);
+          }
+        } catch (error) {
+          if (isMountedRef.current) {
+            setErrorMessage(error.message || 'Social authentication failed. Please try again.');
+          }
+        } finally {
+          if (isMountedRef.current) {
+            setIsLoading(false);
+          }
+        }
+      };
+
+      handleOAuthLogin();
+    }
+  }, [login]);
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setErrorMessage('')
   
     if (!isValidEmail(email)) {
       setErrorMessage('Please enter a valid email address (e.g. name@domain.com)');
-      return; // Interrompe l'invio
+      return;
     }
     
     setIsLoading(true);

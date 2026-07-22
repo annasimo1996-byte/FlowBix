@@ -74,7 +74,7 @@ Di seguito sono riportate alcune schermate dell'applicazione che ne mostrano l'i
 
 ## 📄 Licenza
 
-Questo progetto è distribuito sotto la **Licenza MIT** - consulta il file [LICENSE](LICENSE) per ulteriori dettagli.
+Questo progetto è distribuito sotto la **GNU Lesser General Public License v3.0** - consulta il file [LICENSE](LICENSE) per ulteriori dettagli.
 
 ---
 

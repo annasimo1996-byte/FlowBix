@@ -56,6 +56,12 @@ const AppointmentModal = ({ isOpen, onClose, onSave, selectedDate, clients = [],
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (clients.length === 0) {
+      setError("Please add at least one client before creating an appointment.");
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -83,10 +89,12 @@ const AppointmentModal = ({ isOpen, onClose, onSave, selectedDate, clients = [],
     }
   };
 
+  const hasClients = clients.length > 0;
+
   return (
     <div className="modal-backdrop-custom">
       <div className="modal-content-custom">
-        <h3>{appointmentToEdit ? "Modifica Appuntamento" : "Nuovo Appuntamento"}</h3>
+        <h3>{appointmentToEdit ? "Edit Appointment" : "New Appointment"}</h3>
 
         <form onSubmit={handleSubmit}>
           {error && <div className="error-text-custom">{error}</div>}
@@ -98,13 +106,20 @@ const AppointmentModal = ({ isOpen, onClose, onSave, selectedDate, clients = [],
               value={formData.clientId}
               onChange={handleChange}
               required
+              disabled={!hasClients}
             >
-              <option value="">Select a customer</option>
-              {clients.map((client) => (
-                <option key={client._id || client.id} value={client._id || client.id}>
-                  {client.name} {client.surname || ""}
-                </option>
-              ))}
+              {hasClients ? (
+                <>
+                  <option value="">Select a customer</option>
+                  {clients.map((client) => (
+                    <option key={client._id || client.id} value={client._id || client.id}>
+                      {client.name} {client.surname || ""}
+                    </option>
+                  ))}
+                </>
+              ) : (
+                <option value="">No clients found - Add a client first</option>
+              )}
             </select>
           </div>
 
@@ -135,7 +150,7 @@ const AppointmentModal = ({ isOpen, onClose, onSave, selectedDate, clients = [],
             <input
               type="text"
               name="service"
-              placeholder="Es. Consulting / Treatment"
+              placeholder="E.g. Consulting / Treatment"
               value={formData.service}
               onChange={handleChange}
               required
@@ -154,7 +169,7 @@ const AppointmentModal = ({ isOpen, onClose, onSave, selectedDate, clients = [],
           </div>
 
           <div className="form-group-custom">
-            <label>State</label>
+            <label>Status</label>
             <select
               name="status"
               value={formData.status}
@@ -170,7 +185,7 @@ const AppointmentModal = ({ isOpen, onClose, onSave, selectedDate, clients = [],
             <button type="button" className="btn-secondary-custom" onClick={onClose} disabled={loading}>
               Cancel
             </button>
-            <button type="submit" className="btn-submit-custom" disabled={loading}>
+            <button type="submit" className="btn-submit-custom" disabled={loading || !hasClients}>
               {loading ? "Saving..." : "Save"}
             </button>
           </div>

@@ -2,7 +2,7 @@ import { useState, useContext, useEffect, useRef } from 'react'
 import { Tab, Nav } from 'react-bootstrap'
 import { AuthContext } from '../context/AuthContext'
 import { sendRequest } from '../utils/api'
-import styles from "./LoginPage.module.css"; 
+import styles from "./LoginPage.module.css";
 import Logo from '../components/brand/Logo'
 
 import SocialButtons from '../components/common/SocialButtons'
@@ -27,7 +27,7 @@ const LoginPage = () => {
 
   const [errorMessage, setErrorMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  
+
   const isMountedRef = useRef(true)
   const { login } = useContext(AuthContext)
 
@@ -56,7 +56,7 @@ const LoginPage = () => {
           if (isMountedRef.current) {
             // Salva token e user nello stato globale/localStorage
             login(tokenFromUrl, userData);
-            
+
             // Pulisce il parametro ?token dall'URL 
             window.history.replaceState({}, document.title, window.location.pathname);
           }
@@ -78,12 +78,12 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setErrorMessage('')
-  
+
     if (!isValidEmail(email)) {
       setErrorMessage('Please enter a valid email address (e.g. name@domain.com)');
       return;
     }
-    
+
     setIsLoading(true);
 
     try {
@@ -149,7 +149,7 @@ const LoginPage = () => {
           </div>
         </div>
 
-        <div></div> 
+        <div></div>
       </div>
 
       <div className={styles.formPanel}>
@@ -194,17 +194,12 @@ const LoginPage = () => {
                     <label className="form-label small fw-semibold text-light mb-1">Email</label>
                     <input type="email" className="form-control custom-input rounded-3" placeholder="you@company.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
                   </div>
-                  <div className="mb-2">
+
+                  <div className="mb-4">
                     <label className="form-label small fw-semibold text-light mb-1">Password</label>
                     <input type="password" className="form-control custom-input rounded-3" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
                   </div>
-                  <div className="d-flex justify-content-between align-items-center mb-3">
-                    <div className="form-check">
-                      <input className={`${styles.customCheckbox} form-check-input`} type="checkbox" id="remember" />
-                      <label className="form-check-label small text-white-50" htmlFor="remember">Remember me</label>
-                    </div>
-                  </div>
-                  
+
                   <button type="submit" className="btn btn-primary-custom w-100 rounded-3 py-1.5 fw-bold" disabled={isLoading}>
                     {isLoading ? 'Processing...' : 'Sign in'}
                   </button>
@@ -231,7 +226,7 @@ const LoginPage = () => {
                     <label className="form-label small fw-semibold text-light mb-1">Password</label>
                     <input type="password" className="form-control custom-input rounded-3" placeholder="Create a strong password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                   </div>
-                  
+
                   <button type="submit" className="btn btn-primary-custom w-100 rounded-3 py-1.5 fw-bold" disabled={isLoading}>
                     {isLoading ? 'Processing...' : 'Create account'}
                   </button>

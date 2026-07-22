@@ -56,25 +56,10 @@ function Navbar({ onToggleSidebar }) {
         </button>
         <h1 className="navbarTitle">{getPageTitle(location.pathname)}</h1>
       </div>
-
-      {/* Input di ricerca */}
-      <div className="navbarSearchWrapper">
-        <i className="bi bi-search navbarSearchIcon" />
-        <input
-          type="text"
-          className="navbarSearchInput"
-          placeholder="Search clients, appointments..."
-        />
-      </div>
-
-      {/* Notifiche e informazioni utente */}
+      
+      {/* Informazioni utente */}
       <div className="navbarRight">
-
-        <button className="notificationBtn" title="Notifiche">
-          <i className="bi bi-bell-fill" />
-          <span className="notificationBadge" />
-        </button>
-
+        
         {/* Contenitore Dropdown */}
         <div className="userDropdownWrapper" ref={dropdownRef}>
 
@@ -115,9 +100,6 @@ function Navbar({ onToggleSidebar }) {
               >
                 <i className="bi bi-person me-2" /> Profile
               </Link>
-              <button className="dropdownItem">
-                <i className="bi bi-gear me-2" /> Settings
-              </button>
               <hr className="dropdownDivider" />
               {/*logout */}
               <button className="dropdownItem logoutItem" onClick={logout}>

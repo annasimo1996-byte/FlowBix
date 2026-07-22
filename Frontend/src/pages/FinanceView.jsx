@@ -140,7 +140,7 @@ const FinanceView = () => {
                 <select className="custom-select" value={month} onChange={(e) => setMonth(e.target.value)}>
                   {[...Array(12).keys()].map(m => (
                     <option key={m + 1} value={m + 1}>
-                      {new Date(0, m).toLocaleString('default', { month: 'long' })}
+                      {new Date(0, m).toLocaleString('en-US', { month: 'long' })}
                     </option>
                   ))}
                 </select>
@@ -202,7 +202,7 @@ const FinanceView = () => {
       />
 
       <div className="finance-content">
-        {loading ? <p>Loading...</p> : error ? <p>{error}</p> : combinedData.length === 0 ? <p>No transactions found.</p> : (
+        {loading ? <p>Loading...</p> : error ? <p>{error}</p> : combinedData.length === 0 ? <p className="text-center text-secondary py-4 m-0">No transactions found.</p> : (
           <>
             <div className="table-responsive d-none d-md-block">
               <table className="finance-table">

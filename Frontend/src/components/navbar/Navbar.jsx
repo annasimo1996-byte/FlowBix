@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, Link, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthContext'
 import './Navbar.css'
 
@@ -32,6 +32,8 @@ function Navbar({ onToggleSidebar }) {
         return 'Finance'
       case '/settings':
         return 'Settings'
+      case '/profile':
+        return 'Profile'
       default:
         return 'FlowBix'
     }
@@ -106,9 +108,13 @@ function Navbar({ onToggleSidebar }) {
                 <div className="dropdownUserName">{currentUserName}</div>
                 <hr className="dropdownMenuDivider" />
               </div>
-              <button className="dropdownItem">
+              <Link
+                to="/profile"
+                className="dropdownItem"
+                onClick={() => setDropdownOpen(false)}
+              >
                 <i className="bi bi-person me-2" /> Profile
-              </button>
+              </Link>
               <button className="dropdownItem">
                 <i className="bi bi-gear me-2" /> Settings
               </button>

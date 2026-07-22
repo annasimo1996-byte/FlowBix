@@ -21,6 +21,7 @@ const allowedOrigins = [
 
 require("dotenv").config();
 server.use(express.json());
+server.set("trust proxy", 1);
 server.use(
   cors({
     origin: allowedOrigins,

@@ -137,13 +137,64 @@
   font-size: 1.1rem;
 }
 
+/* FOOTER */
 .sidebarFooter {
-  color: #718096;
-  font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
-  padding-top: 1rem;
+  padding-top: 1.25rem;
+  text-align: center;
 }
 
+/* Badge Versione */
+.footerVersionBadge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--brand-purple, #7c6cff);
+  background-color: rgba(124, 108, 255, 0.1);
+  border: 1px solid rgba(124, 108, 255, 0.25);
+  padding: 0.2rem 0.65rem;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.footerVersionBadge:hover {
+  background-color: rgba(124, 108, 255, 0.2);
+  border-color: rgba(124, 108, 255, 0.4);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* Link Social */
+.footerSocialLinks {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.footerSocialLinks a {
+  color: #a0aec0;
+  font-size: 1.15rem;
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.footerSocialLinks a:hover {
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Copyright */
+.footerCopyright {
+  color: #718096;
+  font-size: 0.75rem;
+  font-weight: 400;
+  white-space: nowrap;
+}
 
 /*MEDIA QUERY: DA DESKTOP IN SU (>= 992px) */
 @media (min-width: 992px) {

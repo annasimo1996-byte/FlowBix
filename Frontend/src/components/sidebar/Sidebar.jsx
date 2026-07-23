@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import './Sidebar.css'
 import Logo from '../brand/Logo' 
+import packageJson from '../../../package.json'
 
 const MENU_ITEMS = [
   { path: '/', label: 'Home', icon: 'bi-grid-1x2-fill' },
@@ -58,9 +59,42 @@ function Sidebar({ isOpen, onClose }) {
           </nav>
         </div>
 
-        {/* FOOTER */}
         <div className="sidebarFooter">
-          <span>© 2026 Anna Maria Simonetti</span>
+          {/*Badge Versione*/}
+          <a 
+            href="https://github.com/annasimo1996-byte/FlowBix/releases" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="footerVersionBadge"
+            title="Vedi le note di rilascio su GitHub"
+          >
+            v{packageJson.version}
+          </a>
+
+          {/*Link Social e Repository */}
+          <div className="footerSocialLinks">
+            <a 
+              href="https://github.com/annasimo1996-byte" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              aria-label="Profilo GitHub"
+              title="GitHub"
+            >
+              <i className="bi bi-github" />
+            </a>
+            <a 
+              href="https://www.linkedin.com/in/anna-maria-simonetti/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              aria-label="Profilo LinkedIn"
+              title="LinkedIn"
+            >
+              <i className="bi bi-linkedin" />
+            </a>
+          </div>
+
+          {/*Copyright */}
+          <span className="footerCopyright">© 2026 Anna Maria Simonetti</span>
         </div>
 
       </aside>

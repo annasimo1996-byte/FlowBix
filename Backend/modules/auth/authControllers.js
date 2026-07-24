@@ -35,6 +35,7 @@ const register = async (req, res, next) => {
         lastName,
         email,
         password: hashedPassword,
+        tokenVersion: 0,
       });
     } catch (dbError) {
       if (dbError.code === 11000) {
@@ -82,10 +83,11 @@ const login = async (req, res, next) => {
 
     const token = jwt.sign(
       {
-        id: user._id
+        id: user._id,
+        tokenVersion: user.tokenVersion || 0,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "24h" }
+      { expiresIn: "4h" }
     );
 
     res.status(200).json({
@@ -112,7 +114,8 @@ const oauthCallback = (req, res, next) => {
 
     const token = jwt.sign(
       {
-        id: req.user._id
+        id: req.user._id,
+        tokenVersion: req.user.tokenVersion || 0,
       },
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
@@ -127,8 +130,27 @@ const oauthCallback = (req, res, next) => {
   }
 };
 
+// LOGOUT SERVER-SIDE (INVALIDAZIONE TOKEN)
+const logout = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      throw new BadRequestException("User not authenticated");
+    }
+    // Incrementa la tokenVersion dell'utente per invalidare tutti i token attuali
+    req.user.tokenVersion = (req.user.tokenVersion || 0) + 1;
+    await req.user.save();
+
+    res.status(200).json({
+      message: "Logout successfully completed on server.",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   register,
   login,
   oauthCallback,
+  logout,
 };

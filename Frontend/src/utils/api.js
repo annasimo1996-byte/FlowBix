@@ -22,6 +22,17 @@ export const sendRequest = async (endpoint, options = {}) => {
     const response = await fetch(`${VITE_API_URL}${endpoint}`, config);
 
     if (!response.ok) {
+
+        // --- GESTIONE TOKEN SCADUTO/NON VALIDO (401) ---
+        if (response.status === 401 && !skipAuth) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            // Reindirizzamento pulito alla pagina di login se il token è scaduto
+            if (window.location.pathname !== "/login") {
+                window.location.href = "/login";
+            }
+        }
+        
         const contentType = response.headers.get("content-type");
         let errorData = {};
 
@@ -35,7 +46,7 @@ export const sendRequest = async (endpoint, options = {}) => {
         const apiError = new Error(errorData.message || `Request failed (${response.status})`);
         apiError.status = response.status;
         apiError.data = errorData;
-        
+
         throw apiError;
     }
 

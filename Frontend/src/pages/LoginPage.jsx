@@ -44,6 +44,11 @@ const LoginPage = () => {
     const tokenFromUrl = params.get('token');
 
     if (tokenFromUrl) {
+      // 🔒 CLEANUP IMMEDIATO DELL'URL:
+      // Rimuove il token dalla barra degli indirizzi PRIMA di fare qualsiasi chiamata di rete.
+      // Evita che il token finisca nella history, nei log o visibile se la fetch fallisce.
+      window.history.replaceState({}, document.title, window.location.pathname);
+
       const handleOAuthLogin = async () => {
         setIsLoading(true);
         try {
@@ -56,9 +61,6 @@ const LoginPage = () => {
           if (isMountedRef.current) {
             // Salva token e user nello stato globale/localStorage
             login(tokenFromUrl, userData);
-
-            // Pulisce il parametro ?token dall'URL 
-            window.history.replaceState({}, document.title, window.location.pathname);
           }
         } catch (error) {
           if (isMountedRef.current) {

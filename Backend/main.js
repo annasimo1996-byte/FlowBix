@@ -2,6 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const passport = require("passport");
 const cors = require("cors");
+const helmet = require("helmet");
+const cookieParser = require("cookie-parser");
 const startDb = require("./config/db.js");
 
 const usersRoute = require("./modules/users/usersRoute.js");
@@ -13,6 +15,15 @@ const dashboardRoute = require ("./modules/dashboard/dashboardRoute.js")
 const errorHandler = require("./middlewares/errorHandler.js");
 const server = express();
 const PORT = process.env.PORT;
+
+// Applicazione middleware di sicurezza HTTP
+server.use(
+  helmet({
+    referrerPolicy: { policy: "no-referrer" }, 
+  })
+);
+
+server.use(cookieParser());
 
 const allowedOrigins = [
   "https://flowbix.vercel.app",

@@ -22,8 +22,8 @@ const DashboardView= () => {
         setStats(data);
       }
     } catch (err) {
-      console.error("Errore durante il recupero delle statistiche:", err);
-      setError("Impossibile caricare i dati della dashboard.");
+      console.error("Error retrieving statistics:", err);
+      setError("Unable to load dashboard data.");
     } finally {
       setLoading(false);
     }

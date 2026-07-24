@@ -97,7 +97,7 @@ const FinanceModal = ({ isOpen, onClose, onSave, expenseToEdit = null }) => {
   return (
     <div className="modal-backdrop-custom">
       <div className="modal-content-custom">
-        <h3>{expenseToEdit ? "Modifica Spesa" : "Nuova Spesa"}</h3>
+        <h3>{expenseToEdit ? "Edit Expense" : "New Purchase"}</h3>
 
         <form onSubmit={handleSubmit}>
           {error && <div className="error-text-custom">{error}</div>}

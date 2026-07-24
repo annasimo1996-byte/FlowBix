@@ -3,33 +3,52 @@ const userService = require("./usersService.js");
 
 const BadRequestException = require("../../exception/BadRequestException");
 const NotFoundException = require("../../exception/NotFoundException");
+const ForbiddenException = require("../../exception/ForbiddenException");
 
-//TUTTI GLI UTENTI
+// GET /users - Limitato agli ADMIN
 const getAllUsers = async (req, res, next) => {
   try {
+    if (req.user.role !== "admin") {
+      throw new ForbiddenException("Access denied: Admin rights required");
+    }
     const users = await userService.findUsers();
-    res.status(200).json(users);
+    
+    // Serializza la lista di utenti
+    const publicUsers = users.map((u) => u.toPublicJSON());
+    res.status(200).json(publicUsers);
   } catch (error) {
     next(error);
   }
 };
 
-//UN UTENTE PER ID
+// GET /users/:id - Solo se è l'utente proprietario dell'account o un admin
 const getUserById = async (req, res, next) => {
   try {
+    const isOwner = req.user.id.toString() === req.params.id;
+    const isAdmin = req.user.role === "admin";
+
+    if (!isOwner && !isAdmin) {
+      throw new ForbiddenException("Access denied: You can only access your own profile");
+    }
+
     const user = await userService.findUserById(req.params.id);
     if (!user) {
       throw new NotFoundException("User not found");
     }
-    res.status(200).json(user);
+    
+    res.status(200).json(user.toPublicJSON());
   } catch (error) {
     next(error);
   }
 };
 
-//NUOVO UTENTE
+// POST /users - Solo per Admin
 const createUser = async (req, res, next) => {
   try {
+    if (req.user.role !== "admin") {
+      throw new ForbiddenException("Access denied: Admin rights required");
+    }
+
     const { firstName, lastName, email, password } = req.body;
 
     if (!firstName || !lastName || !email || !password) {
@@ -41,7 +60,6 @@ const createUser = async (req, res, next) => {
       throw new BadRequestException("This email is already registered");
     }
 
-    // Applicazione dell'hashing della password per sicurezza
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -60,40 +78,69 @@ const createUser = async (req, res, next) => {
       throw dbError;
     }
 
-    res.status(201).json(newUser);
+    res.status(201).json(newUser.toPublicJSON());
   } catch (error) {
     next(error);
   }
 };
 
-//CONTROLLO DEL TOKEN CORRENTE
+// GET /users/me - Profilo dell'utente corrente 
 const getMyProfile = async (req, res, next) => {
   try {
     if (!req.user) {
       throw new NotFoundException("User not found!");
     }
-    res.status(200).json(req.user);
+   
+    res.status(200).json(req.user.toPublicJSON());
   } catch (error) {
     next(error);
   }
 };
 
-//AGGIORNA UN UTENTE
+// PUT /users/:id - Ownership check + Mass Assignment Defense
 const updateUser = async (req, res, next) => {
   try {
-    const updatedUser = await userService.updateUser(req.params.id, req.body);
+    const isOwner = req.user.id.toString() === req.params.id;
+    const isAdmin = req.user.role === "admin";
+
+    if (!isOwner && !isAdmin) {
+      throw new ForbiddenException("Access denied: You can only update your own profile");
+    }
+
+    // Estrae solo i campi modificabili dal body
+    const { firstName, lastName, email, avatarUrl } = req.body;
+    const updateData = {};
+    
+    if (firstName !== undefined) updateData.firstName = firstName;
+    if (lastName !== undefined) updateData.lastName = lastName;
+    if (email !== undefined) updateData.email = email;
+    if (avatarUrl !== undefined) updateData.avatarUrl = avatarUrl;
+
+    if (Object.keys(updateData).length === 0) {
+      throw new BadRequestException("No valid fields provided for update");
+    }
+
+    const updatedUser = await userService.updateUser(req.params.id, updateData);
     if (!updatedUser) {
       throw new NotFoundException("User not found");
     }
-    res.status(200).json(updatedUser);
+
+    res.status(200).json(updatedUser.toPublicJSON());
   } catch (error) {
     next(error);
   }
 };
 
-//ELIMINA UN UTENTE
+// DELETE /users/:id - Ownership check o Admin
 const deleteUser = async (req, res, next) => {
   try {
+    const isOwner = req.user.id.toString() === req.params.id;
+    const isAdmin = req.user.role === "admin";
+
+    if (!isOwner && !isAdmin) {
+      throw new ForbiddenException("Access denied: You can only delete your own profile");
+    }
+
     const deletedUser = await userService.deleteUser(req.params.id);
     if (!deletedUser) {
       throw new NotFoundException("User not found");

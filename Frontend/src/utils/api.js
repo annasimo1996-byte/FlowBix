@@ -1,7 +1,7 @@
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 export const sendRequest = async (endpoint, options = {}) => {
-    // Estraiamo skipAuth per evitare di aggiungere il token nelle rotte pubbliche
+    // Estrae skipAuth per evitare di aggiungere il token nelle rotte pubbliche
     const { skipAuth = false, ...fetchOptions } = options;
     const token = localStorage.getItem("token");
 
@@ -22,6 +22,12 @@ export const sendRequest = async (endpoint, options = {}) => {
     const response = await fetch(`${VITE_API_URL}${endpoint}`, config);
 
     if (!response.ok) {
+        // Toke che scade mentre l'utente è loggato 
+        if ((response.status === 401 || response.status === 403) && !skipAuth) {
+            // Evento globale intercettabile da AuthContext
+            window.dispatchEvent(new CustomEvent("auth:unauthorized"));
+        }
+        
         const contentType = response.headers.get("content-type");
         let errorData = {};
 
@@ -35,7 +41,7 @@ export const sendRequest = async (endpoint, options = {}) => {
         const apiError = new Error(errorData.message || `Request failed (${response.status})`);
         apiError.status = response.status;
         apiError.data = errorData;
-        
+
         throw apiError;
     }
 

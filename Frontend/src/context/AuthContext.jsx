@@ -3,6 +3,22 @@ import { sendRequest } from '../utils/api'
 
 export const AuthContext = createContext()
 
+//Memorizza solo i dati minimi indispensabili per la UI
+const sanitizeUser = (rawUser) => {
+  if (!rawUser) return null
+  return {
+    id: rawUser.id || rawUser._id,
+    firstName: rawUser.firstName || '',
+    lastName: rawUser.lastName || '',
+    email: rawUser.email || '',
+    avatarUrl: rawUser.avatarUrl || null,
+    providers: {
+      google: Boolean(rawUser.providers?.google),
+      github: Boolean(rawUser.providers?.github),
+    },
+  }
+}
+
 const readStoredSession = () => {
   const token = localStorage.getItem('token')
   const savedUser = localStorage.getItem('user')
@@ -12,7 +28,7 @@ const readStoredSession = () => {
   }
 
   try {
-    const user = JSON.parse(savedUser)
+    const user = sanitizeUser(JSON.parse(savedUser))
     return { token, user, status: 'checking' }
   } catch {
     localStorage.removeItem('token')
@@ -77,8 +93,9 @@ export function AuthProvider({ children }) {
         }
 
         if (freshUserData) {
-          setUser(freshUserData)
-          localStorage.setItem('user', JSON.stringify(freshUserData))
+          const cleanUser = sanitizeUser(freshUserData)
+          setUser(cleanUser)
+          localStorage.setItem('user', JSON.stringify(cleanUser))
         }
         setAuthStatus('authenticated')
       } catch (err) {
@@ -106,10 +123,11 @@ export function AuthProvider({ children }) {
   }, [token, clearClientSession])
 
   const login = (newToken, userData) => {
+    const cleanUser = sanitizeUser(userData)
     localStorage.setItem('token', newToken)
-    localStorage.setItem('user', JSON.stringify(userData))
+    localStorage.setItem('user', JSON.stringify(cleanUser))
     setToken(newToken)
-    setUser(userData)
+    setUser(cleanUser)
     setAuthStatus('authenticated')
   }
 
@@ -121,7 +139,7 @@ export function AuthProvider({ children }) {
     } catch (err) {
       console.warn("Errore durante il logout dal server:", err.message)
     } finally {
-      // Pulisce lo stato locale indipendentemente dall'esito della chiamata
+      // Pulisce comunque lo stato locale indipendentemente dall'esito della chiamata
       clearClientSession()
     }
   }

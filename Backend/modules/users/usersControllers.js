@@ -12,7 +12,10 @@ const getAllUsers = async (req, res, next) => {
       throw new ForbiddenException("Access denied: Admin rights required");
     }
     const users = await userService.findUsers();
-    res.status(200).json(users);
+    
+    // Serializza la lista di utenti
+    const publicUsers = users.map((u) => u.toPublicJSON());
+    res.status(200).json(publicUsers);
   } catch (error) {
     next(error);
   }
@@ -32,13 +35,14 @@ const getUserById = async (req, res, next) => {
     if (!user) {
       throw new NotFoundException("User not found");
     }
-    res.status(200).json(user);
+    
+    res.status(200).json(user.toPublicJSON());
   } catch (error) {
     next(error);
   }
 };
 
-// POST /users - Solo per Admin (la registrazione standard passa da /auth/register)
+// POST /users - Solo per Admin
 const createUser = async (req, res, next) => {
   try {
     if (req.user.role !== "admin") {
@@ -74,7 +78,7 @@ const createUser = async (req, res, next) => {
       throw dbError;
     }
 
-    res.status(201).json(newUser);
+    res.status(201).json(newUser.toPublicJSON());
   } catch (error) {
     next(error);
   }
@@ -86,13 +90,14 @@ const getMyProfile = async (req, res, next) => {
     if (!req.user) {
       throw new NotFoundException("User not found!");
     }
-    res.status(200).json(req.user);
+   
+    res.status(200).json(req.user.toPublicJSON());
   } catch (error) {
     next(error);
   }
 };
 
-// PUT /users/:id - Ownership check + Allowlist (solamente firstName e lastName)
+// PUT /users/:id - Ownership check + Allowlist
 const updateUser = async (req, res, next) => {
   try {
     const isOwner = req.user.id.toString() === req.params.id;
@@ -115,7 +120,8 @@ const updateUser = async (req, res, next) => {
     if (!updatedUser) {
       throw new NotFoundException("User not found");
     }
-    res.status(200).json(updatedUser);
+
+    res.status(200).json(updatedUser.toPublicJSON());
   } catch (error) {
     next(error);
   }

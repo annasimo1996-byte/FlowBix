@@ -13,16 +13,16 @@ function ProfileView() {
     return `${first}${last}`.toUpperCase()
   }
 
-  // Determina il provider di autenticazione dell'utente
+  // Determina il provider di autenticazione basandosi sull'oggetto `providers` pulito
   const getAuthProviderDetails = () => {
-    if (user?.googleId) {
+    if (user?.providers?.google) {
       return {
         label: 'Google Linked',
         icon: 'bi-google',
         badgeClass: 'providerBadge googleBadge',
       }
     }
-    if (user?.githubId) {
+    if (user?.providers?.github) {
       return {
         label: 'GitHub Account',
         icon: 'bi-github',

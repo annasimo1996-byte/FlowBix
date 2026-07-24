@@ -1,10 +1,8 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
 const userService = require("../users/usersService.js");
 
 const BadRequestException = require("../../exception/BadRequestException.js");
-const NotFoundException = require("../../exception/NotFoundException");
 
 // REGISTRAZIONE UTENTE
 const register = async (req, res, next) => {
@@ -46,12 +44,7 @@ const register = async (req, res, next) => {
 
     res.status(201).json({
       message: "User registered successfully!",
-      user: {
-        id: newUser._id,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName,
-        email: newUser.email
-      }
+      user: newUser.toPublicJSON(), 
     });
   } catch (error) {
     next(error);
@@ -93,12 +86,7 @@ const login = async (req, res, next) => {
     res.status(200).json({
       message: "Login successful!",
       token,
-      user: {
-        id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-      },
+      user: user.toPublicJSON(), 
     });
   } catch (error) {
     next(error);
@@ -121,9 +109,9 @@ const oauthCallback = (req, res, next) => {
       { expiresIn: "24h" }
     );
 
-    const frontendUrl = process.env.CLIENT_URL || process.env.CLIENT_URL;
-    
-    // Reindirizzamento al frontend con token nella query string
+    const frontendUrl = process.env.CLIENT_URL;
+
+    // Reindirizzamento al frontend inviando solo il token
     res.redirect(`${frontendUrl}/login?token=${token}`);
   } catch (error) {
     next(error);

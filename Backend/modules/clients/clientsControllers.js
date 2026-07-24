@@ -1,4 +1,5 @@
 const clientService = require('./clientsService');
+const BadRequestException = require('../../exception/BadRequestException');
 
 const getClients = async (req, res, next) => {
   try {
@@ -11,6 +12,10 @@ const getClients = async (req, res, next) => {
 
 const createClient = async (req, res, next) => {
   try {
+    if (!req.body || Object.keys(req.body).length === 0) {
+      throw new BadRequestException('Request body cannot be empty');
+    }
+
     const newClient = await clientService.createClient(req.body, req.user.id);
     res.status(201).json(newClient);
   } catch (error) {
@@ -20,6 +25,10 @@ const createClient = async (req, res, next) => {
 
 const updateClient = async (req, res, next) => {
   try {
+    if (!req.body || Object.keys(req.body).length === 0) {
+      throw new BadRequestException('Request body cannot be empty');
+    }
+
     const updatedClient = await clientService.updateClient(req.params.id, req.body, req.user.id);
     res.status(200).json(updatedClient);
   } catch (error) {

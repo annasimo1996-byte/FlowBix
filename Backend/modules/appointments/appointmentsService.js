@@ -1,35 +1,71 @@
 const Appointment = require("./appointmentsSchema.js");
 
+//Campi modificabili
+const ALLOWED_APPOINTMENT_FIELDS = [
+  "clientId",
+  "title",
+  "date",
+  "time",
+  "duration",
+  "status",
+  "notes",
+  "location"
+];
+
+// Helper per formattare la data DD/MM/YYYY in un oggetto Date di JS
+const parseDateString = (dateInput) => {
+  if (typeof dateInput === 'string' && dateInput.includes('/')) {
+    const [day, month, year] = dateInput.split('/');
+    return new Date(`${year}-${month}-${day}`);
+  }
+  return dateInput;
+};
+
+// Helper interno per estrarre solo i campi autorizzati
+const sanitizeAppointmentInput = (inputData) => {
+  const sanitized = {};
+  ALLOWED_APPOINTMENT_FIELDS.forEach((field) => {
+    if (inputData[field] !== undefined) {
+      sanitized[field] = inputData[field];
+    }
+  });
+
+  // Gestione formato data
+  if (sanitized.date) {
+    sanitized.date = parseDateString(sanitized.date);
+  }
+
+  return sanitized;
+};
+
 const fetchAppointments = async (userId) => {
   return await Appointment.find({ userId })
     .populate("clientId", "name surname email phone")
     .sort({ date: 1 });
 };
 
-const addAppointment = async (appointmentData) => {
-  // DD/MM/YYYY -> oggetto Date
-  if (appointmentData.date && typeof appointmentData.date === 'string' && appointmentData.date.includes('/')) {
-    const [day, month, year] = appointmentData.date.split('/');
-    appointmentData.date = new Date(`${year}-${month}-${day}`);
-  }
-
-  return await Appointment.create(appointmentData);
+const addAppointment = async (appointmentData, userId) => {
+  const sanitizedData = sanitizeAppointmentInput(appointmentData);
+  
+  const newAppointment = new Appointment({ ...sanitizedData, userId });
+  const savedAppointment = await newAppointment.save();
+  
+  return await savedAppointment.populate("clientId", "name surname email phone");
 };
 
 const updateAppointmentService = async (id, userId, updateData) => {
-  if (updateData.date && typeof updateData.date === 'string' && updateData.date.includes('/')) {
-    const [day, month, year] = updateData.date.split('/');
-    updateData.date = new Date(`${year}-${month}-${day}`);
-  }
+  //Estrae solo i campi consentiti
+  const sanitizedData = sanitizeAppointmentInput(updateData);
 
   return await Appointment.findOneAndUpdate(
     { _id: id, userId },
-    updateData,
+    sanitizedData, 
     { returnDocument: "after", runValidators: true }
   ).populate("clientId", "name surname email phone");
 };
 
 const changeAppointmentStatus = async (id, userId, status) => {
+  //Aggiorna solo lo stato
   return await Appointment.findOneAndUpdate(
     { _id: id, userId },
     { status },

@@ -32,9 +32,20 @@ const updateUser = async (id, updateData) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new BadRequestException("Invalid user ID format.");
   }
+
+  //Restrizioni nell'aggiornamento dei campi
+  const allowedUpdates = {};
+  const allowedFields = ["firstName", "lastName", "email", "avatarUrl"];
+
+  allowedFields.forEach((field) => {
+    if (updateData[field] !== undefined) {
+      allowedUpdates[field] = updateData[field];
+    }
+  });
+
   const updatedUser = await User.findByIdAndUpdate(
     id,
-    updateData,
+    allowedUpdates, 
     { returnDocument: 'after', runValidators: true }
   );
 

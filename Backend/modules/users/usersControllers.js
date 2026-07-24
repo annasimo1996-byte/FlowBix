@@ -97,7 +97,7 @@ const getMyProfile = async (req, res, next) => {
   }
 };
 
-// PUT /users/:id - Ownership check + Allowlist
+// PUT /users/:id - Ownership check + Mass Assignment Defense
 const updateUser = async (req, res, next) => {
   try {
     const isOwner = req.user.id.toString() === req.params.id;
@@ -107,10 +107,14 @@ const updateUser = async (req, res, next) => {
       throw new ForbiddenException("Access denied: You can only update your own profile");
     }
 
-    const { firstName, lastName } = req.body;
+    // Estrae solo i campi modificabili dal body
+    const { firstName, lastName, email, avatarUrl } = req.body;
     const updateData = {};
-    if (firstName) updateData.firstName = firstName;
-    if (lastName) updateData.lastName = lastName;
+    
+    if (firstName !== undefined) updateData.firstName = firstName;
+    if (lastName !== undefined) updateData.lastName = lastName;
+    if (email !== undefined) updateData.email = email;
+    if (avatarUrl !== undefined) updateData.avatarUrl = avatarUrl;
 
     if (Object.keys(updateData).length === 0) {
       throw new BadRequestException("No valid fields provided for update");

@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from 'react'
+import { createContext, useState, useEffect, useCallback } from 'react'
 import { sendRequest } from '../utils/api'
 
 export const AuthContext = createContext()
@@ -32,6 +32,29 @@ export function AuthProvider({ children }) {
   const isBootstrapped = authStatus !== 'checking' || !token
   const isVerifyingToken = authStatus === 'checking'
   const isLogged = Boolean(token && user)
+
+  // Funzione helper per pulire la sessione lato client
+  const clearClientSession = useCallback(() => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    setToken(null)
+    setUser(null)
+    setAuthStatus('anonymous')
+  }, [])
+
+  // Ascolta l'evento 'auth:unauthorized' inviato da sendRequest su errori 401/403
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      console.warn("Sessione scaduta o non autorizzata. Effettuo logout automatico.")
+      clearClientSession()
+    }
+
+    window.addEventListener('auth:unauthorized', handleUnauthorized)
+
+    return () => {
+      window.removeEventListener('auth:unauthorized', handleUnauthorized)
+    }
+  }, [clearClientSession])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -70,11 +93,7 @@ export function AuthProvider({ children }) {
         console.warn("Background token verification failed:", err.message)
 
         if (err instanceof SyntaxError || err.status === 401 || err.status === 403) {
-          localStorage.removeItem('token')
-          localStorage.removeItem('user')
-          setToken(null)
-          setUser(null)
-          setAuthStatus('anonymous')
+          clearClientSession()
         } else {
           setAuthStatus('authenticated')
         }
@@ -84,7 +103,7 @@ export function AuthProvider({ children }) {
     verifyTokenInBackground()
 
     return () => controller.abort()
-  }, [token])
+  }, [token, clearClientSession])
 
   const login = (newToken, userData) => {
     localStorage.setItem('token', newToken)
@@ -94,12 +113,17 @@ export function AuthProvider({ children }) {
     setAuthStatus('authenticated')
   }
 
-  const logout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    setToken(null)
-    setUser(null)
-    setAuthStatus('anonymous')
+  // Logout (Server-side + Client-side)
+  const logout = async () => {
+    try {
+      // Invia la richiesta al backend per incrementare tokenVersion ed invalidare il JWT
+      await sendRequest('/auth/logout', { method: 'POST' })
+    } catch (err) {
+      console.warn("Errore durante il logout dal server:", err.message)
+    } finally {
+      // Pulisce lo stato locale indipendentemente dall'esito della chiamata
+      clearClientSession()
+    }
   }
 
   return (

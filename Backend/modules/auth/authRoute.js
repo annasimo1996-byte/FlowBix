@@ -1,7 +1,6 @@
 const express = require("express");
 const authRouter = express.Router();
 const passport = require("passport");
-const { register, login, oauthCallback } = require("./authControllers.js");
 const { protect } = require("../../middlewares/authMiddleware.js");
 const { register, login, oauthCallback, logout } = require("./authControllers.js");
 require("../../config/passport.js");

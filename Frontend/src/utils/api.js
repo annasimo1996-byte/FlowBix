@@ -1,7 +1,7 @@
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 export const sendRequest = async (endpoint, options = {}) => {
-    // Estraiamo skipAuth per evitare di aggiungere il token nelle rotte pubbliche
+    // Estrae skipAuth per evitare di aggiungere il token nelle rotte pubbliche
     const { skipAuth = false, ...fetchOptions } = options;
     const token = localStorage.getItem("token");
 
@@ -22,15 +22,10 @@ export const sendRequest = async (endpoint, options = {}) => {
     const response = await fetch(`${VITE_API_URL}${endpoint}`, config);
 
     if (!response.ok) {
-
-        // --- GESTIONE TOKEN SCADUTO/NON VALIDO (401) ---
-        if (response.status === 401 && !skipAuth) {
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
-            // Reindirizzamento pulito alla pagina di login se il token è scaduto
-            if (window.location.pathname !== "/login") {
-                window.location.href = "/login";
-            }
+        // Toke che scade mentre l'utente è loggato 
+        if ((response.status === 401 || response.status === 403) && !skipAuth) {
+            // Evento globale intercettabile da AuthContext
+            window.dispatchEvent(new CustomEvent("auth:unauthorized"));
         }
         
         const contentType = response.headers.get("content-type");

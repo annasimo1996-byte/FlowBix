@@ -38,6 +38,15 @@ const LoginPage = () => {
     }
   }, [])
 
+  // 🆕 Legge eventuali messaggi di sessione scaduta salvati prima del redirect
+  useEffect(() => {
+    const authMessage = sessionStorage.getItem('authMessage');
+    if (authMessage) {
+      setErrorMessage(authMessage);
+      sessionStorage.removeItem('authMessage'); // Pulizia dopo la lettura
+    }
+  }, []);
+
   // Intercetta il token restituito da Google/Social OAuth
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -45,21 +54,17 @@ const LoginPage = () => {
 
     if (tokenFromUrl) {
       // 🔒 CLEANUP IMMEDIATO DELL'URL:
-      // Rimuove il token dalla barra degli indirizzi PRIMA di fare qualsiasi chiamata di rete.
-      // Evita che il token finisca nella history, nei log o visibile se la fetch fallisce.
       window.history.replaceState({}, document.title, window.location.pathname);
 
       const handleOAuthLogin = async () => {
         setIsLoading(true);
         try {
-          // Recupera i dati dell'utente usando il token ricevuto
           const userData = await sendRequest('/users/me', {
             method: 'GET',
             headers: { Authorization: `Bearer ${tokenFromUrl}` },
           });
 
           if (isMountedRef.current) {
-            // Salva token e user nello stato globale/localStorage
             login(tokenFromUrl, userData);
           }
         } catch (error) {

@@ -30,7 +30,7 @@ const createAppointment = async (req, res, next) => {
     const validStatuses = ["scheduled", "completed", "canceled"];
     const appointmentStatus = status && validStatuses.includes(status) ? status : "scheduled";
 
-    //Passa body e id autenticato
+    // Passa body e id autenticato
     const newAppointment = await addAppointment(
       {
         clientId,
@@ -61,7 +61,7 @@ const updateAppointment = async (req, res, next) => {
     if (!req.body || Object.keys(req.body).length === 0) {
       throw new BadRequestException("Request body cannot be empty");
     }
-
+    
     const updated = await updateAppointmentService(id, userId, req.body);
 
     if (!updated) {
